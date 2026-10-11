@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Calendar Event Length",
+  "version": "0.1.0",
+  "description": "Display durations on supported Google Calendar Day and Week event blocks.",
+  "content_scripts": [{
+    "matches": ["https://calendar.google.com/*"],
+    "js": ["duration.js", "content.js"],
+    "css": ["content.css"],
+    "run_at": "document_idle"
+  }]
+}

@@ -1,0 +1,16 @@
+[data-calendar-length] {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: rgb(0 0 0 / 15%);
+  color: inherit;
+  font: 600 11px/15px Arial, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none !important;
+  user-select: none !important;
+}
