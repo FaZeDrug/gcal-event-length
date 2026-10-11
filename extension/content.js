@@ -2,7 +2,7 @@
   if (globalThis.__calendarLengthStarted) return;
   globalThis.__calendarLengthStarted = true;
   const eventSelector = '[data-eventid][role="button"], [data-eventid] > [role="button"]';
-  const timeSelector = '.Jmftzc.gVNoLb.EiZ8Dd';
+  const timeSelector = '.gVNoLb.EiZ8Dd';
   const badgeSelector = '[data-calendar-length]';
   const { duration, format } = globalThis.CalendarLength;
   let queued = false;
@@ -30,6 +30,7 @@
           times[0].after(badge);
         }
         if (badge.previousElementSibling !== times[0]) times[0].after(badge);
+        badge.style.color = getComputedStyle(times[0]).color;
         if (badge.textContent !== format(minutes)) badge.textContent = format(minutes);
         kept.add(badge);
       }
@@ -39,7 +40,7 @@
     }
     observer.observe(document.documentElement, {
       subtree: true, childList: true, characterData: true, attributes: true,
-      attributeFilter: ['class', 'role', 'data-eventid', 'aria-label']
+      attributeFilter: ['class', 'style', 'role', 'data-eventid', 'aria-label']
     });
   }
 
