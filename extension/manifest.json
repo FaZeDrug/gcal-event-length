@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Calendar Event Length",
-  "version": "0.3.0",
+  "name": "Google Calendar Event Length",
+  "version": "0.4.0",
   "permissions": ["storage"],
-  "action": { "default_title": "Calendar Event Length", "default_popup": "popup.html" },
+  "action": { "default_title": "Google Calendar Event Length", "default_popup": "popup.html", "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" } },
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
   "description": "Display durations on supported Google Calendar Day and Week event blocks.",
   "content_scripts": [{
     "matches": ["https://calendar.google.com/*"],

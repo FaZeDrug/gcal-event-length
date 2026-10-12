@@ -6,9 +6,9 @@ async function load() {
     const { durationStyle } = await chrome.storage.local.get('durationStyle');
     document.querySelector(`input[value="${durationStyle === 'text' ? 'text' : 'box'}"]`).checked = true;
     fieldset.disabled = false;
-    status.textContent = 'Preferences are saved on this device.';
+    status.textContent = 'Preferences saved on this device.';
   } catch {
-    status.textContent = 'Could not load settings. Close and reopen this popup to retry.';
+    status.textContent = 'Could not load. Reopen to retry.';
   }
 }
 
@@ -19,7 +19,7 @@ fieldset.addEventListener('change', async (event) => {
     await chrome.storage.local.set({ durationStyle: event.target.value });
     status.textContent = 'Saved.';
   } catch {
-    status.textContent = 'Could not save. Select the style again to retry.';
+    status.textContent = 'Could not save. Select a style to retry.';
     event.target.checked = false;
   } finally {
     fieldset.disabled = false;

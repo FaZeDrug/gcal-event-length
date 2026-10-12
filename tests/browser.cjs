@@ -166,7 +166,7 @@ const server = require('../scripts/demo.cjs');
     const extensionId = await extensions.locator('extensions-item').first().getAttribute('id');
     await extensions.close();
     let popup = await context.newPage();
-    await popup.setViewportSize({ width: 340, height: 360 });
+    await popup.setViewportSize({ width: 360, height: 560 });
     await popup.goto(`chrome-extension://${extensionId}/popup.html`);
     await popup.waitForFunction(() => !document.querySelector('fieldset').disabled);
     assert.equal(await popup.locator('input[value="box"]').isChecked(), true);

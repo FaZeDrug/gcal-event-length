@@ -40,3 +40,20 @@ test('manifest is MV3 with only Calendar content access', () => {
   assert.equal(manifest.action.default_popup, 'popup.html');
   assert.equal(manifest.background, undefined);
 });
+
+test('packaged popup assets and icons exist locally', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const root = path.resolve(__dirname, '../extension');
+  const manifest = require('../extension/manifest.json');
+  for (const [size, file] of Object.entries(manifest.icons)) {
+    const png = fs.readFileSync(path.join(root, file));
+    assert.equal(png.readUInt32BE(16), Number(size));
+    assert.equal(png.readUInt32BE(20), Number(size));
+  }
+  const html = fs.readFileSync(path.join(root, manifest.action.default_popup), 'utf8');
+  for (const [, file] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
+    assert.equal(/^(https?:|\/\/)/.test(file), false);
+    assert.equal(fs.existsSync(path.join(root, file)), true);
+  }
+});
