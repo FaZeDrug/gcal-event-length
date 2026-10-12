@@ -3,8 +3,8 @@
 * { box-sizing: border-box; }
 body { margin: 0; padding: 24px; background: #e9e6ed; color: #322a3e; font: 14px/1.5 Inter, sans-serif; }
 aside { max-width: 620px; margin: 0 0 20px; }
-.popup { width: 360px; height: 560px; position: relative; overflow: hidden; background: radial-gradient(ellipse at 0% 10%, #9D87CA99, transparent 46%), radial-gradient(ellipse at 100% 3%, #E9BFA577, transparent 34%), #160D24; color: #FFFDF7; box-shadow: inset 0 0 26px 5px #F7F3F8aa; margin-bottom: 20px; }
-.popup::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(#fff2 .5px, transparent 1px) 0 0 / 4px 4px; mask-image: linear-gradient(to right, black, transparent 25px, transparent 335px, black); }
+.popup { width: 360px; height: 560px; position: relative; overflow: hidden; background: radial-gradient(ellipse at 0% 15%, #9D87CAcc, transparent 45%), radial-gradient(ellipse at 100% 8%, #E9BFA588, transparent 40%), radial-gradient(ellipse at 100% 90%, #9D87CA88, transparent 32%), #160D24; color: #FFFDF7; box-shadow: inset 0 0 24px 9px #F7F3F8, inset 0 0 70px 12px #9D87CA88; margin-bottom: 20px; }
+.popup::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: url('texture.svg') 0 0 / 360px 560px; }
 .ornament { position: absolute; top: 18px; left: 0; width: 300px; height: 170px; overflow: hidden; pointer-events: none; }
 canvas, .poster { position: absolute; width: 300px; height: 170px; image-rendering: pixelated; }
 header { position: absolute; top: 195px; left: 30px; width: 300px; }

@@ -15,7 +15,7 @@
     { length: 95, angle: -.35, phase: 0, flowers: [[30, -8, 13], [61, 7, 14], [86, -9, 12]], children: [
       { length: 86, angle: -.42, phase: 1.3, flowers: [[28, -7, 12], [62, 6, 13]], children: [] },
       { length: 96, angle: .5, phase: 2.4, flowers: [[31, -6, 14], [72, 6, 12]], children: [
-        { length: 65, angle: .35, phase: 3, flowers: [[36, -7, 13]], children: [] }
+        { length: 85, angle: .35, phase: 3, flowers: [[53, -7, 13]], children: [] }
       ] }
     ] },
     { length: 95, angle: -.14, phase: 1.8, flowers: [[34, 6, 13], [72, -8, 12]], children: [
@@ -24,6 +24,7 @@
   ];
 
   function flower(x, y, radius, phase, time) {
+    radius += 1;
     ink.save();
     ink.translate(x, y);
     ink.rotate(phase + Math.sin(time * .72 - phase) * .035);
@@ -32,13 +33,13 @@
     for (let p = 0; p < 5; p++) {
       ink.save();
       ink.rotate(p * Math.PI * 2 / 5);
-      ink.fillStyle = `rgba(255,255,255,${p % 2 ? .62 : .78})`;
+      ink.fillStyle = `rgba(255,255,255,${p % 2 ? .68 : .84})`;
       ink.beginPath();
-      ink.moveTo(0, 0);
-      ink.bezierCurveTo(-radius * .25, -radius * .4, -radius * .6, -radius * 1.1, -radius * .16, -radius);
-      ink.lineTo(0, -radius * .78);
-      ink.lineTo(radius * .16, -radius);
-      ink.bezierCurveTo(radius * .6, -radius * 1.1, radius * .25, -radius * .4, 0, 0);
+      ink.moveTo(0, 1);
+      ink.bezierCurveTo(-radius * .15, -radius * .18, -radius * .62, -radius * .58, -radius * .4, -radius * .88);
+      ink.bezierCurveTo(-radius * .30, -radius * 1.06, -radius * .10, -radius * 1.02, 0, -radius * .86);
+      ink.bezierCurveTo(radius * .10, -radius * 1.02, radius * .30, -radius * 1.06, radius * .4, -radius * .88);
+      ink.bezierCurveTo(radius * .62, -radius * .58, radius * .15, -radius * .18, 0, 1);
       ink.fill();
       ink.restore();
     }
@@ -75,7 +76,7 @@
     ink.clearRect(0, 0, 150, 85);
     ink.scale(1 / 2, 1 / 2);
     for (let i = 0; i < branches.length; i++) {
-      ink.save(); ink.translate(-12, i ? 126 : 89); branch(branches[i], time); ink.restore();
+      ink.save(); ink.translate(-12, i ? 131 : 100); branch(branches[i], time); ink.restore();
     }
     if (falling) for (let i = 0; i < petals.length; i++) {
       const petal = petals[i];
