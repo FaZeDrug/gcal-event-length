@@ -42,7 +42,7 @@
     if (active) {
       for (const event of document.querySelectorAll(eventSelector)) {
         if (!event.closest('[role="main"]') || event.closest('[role="dialog"]')) continue;
-        if (/\ball[ -]day\b/i.test(event.getAttribute('aria-label') || '')) continue;
+        if (/^\s*all[ -]day\b/i.test(event.getAttribute('aria-label') || '')) continue;
         const times = [...event.querySelectorAll(timeSelector)].filter((node) =>
           node.closest(eventSelector) === event && !node.querySelector(timeSelector)
         );
