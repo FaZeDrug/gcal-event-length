@@ -5,7 +5,7 @@
   "scripts": {
     "test": "node --test tests/*.test.cjs",
     "demo": "node scripts/demo.cjs",
-    "test:browser": "node tests/browser.cjs"
+    "test:browser": "node tests/browser.cjs && node tests/popup.cjs"
   },
   "engines": { "node": ">=22" },
   "devDependencies": { "playwright": "1.58.2" }

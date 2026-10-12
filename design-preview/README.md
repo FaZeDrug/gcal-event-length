@@ -1,6 +1,6 @@
 # Sakura popup study — revision 2, unapproved
 
-This folder is an isolated design/motion prototype. **Nothing in `extension/` or the installed extension was changed.** Native radio inputs simulate a saving state here; they do not write `durationStyle` or communicate with Calendar tabs. Production integration and real unpacked-extension motion/settings checks are deliberately deferred until the design is chosen.
+This folder preserves the original isolated design/motion prototype. **Since version 0.4.0, the extension integrates the approved design in `extension/`.** The native radio inputs in this sandbox still only simulate saving; they do not write `durationStyle` or communicate with Calendar tabs. Use the installed extension to exercise real settings and see the root README for current verification.
 
 ## Open the designs
 
@@ -11,7 +11,7 @@ This folder is an isolated design/motion prototype. **Nothing in `extension/` or
 - Twelve frames: ready/box, loading, saving, saved, save error, load error, reduced motion, keyboard focus, gentle-gust keyframe, drifting-petal keyframe, enlarged blossom detail, and parentheses selected.
 - Popup frames are 360 × 560 CSS pixels; the detail frame is enlarged 2×.
 - Text, controls, surfaces and focus indicators are editable Paper nodes. The illustration is a grouped **SVG vector path of dither cells**, not a pasted screenshot or raster image. The static vectors are keyframes; independent motion is implemented only in the standalone Canvas preview.
-- The preview title is corrected to **Google Calendar Event Length**. Paper's revision 1 still has the old misspelling pending the quota reset. The installed extension retains its existing name until approval.
+- The preview title is corrected to **Google Calendar Event Length**. Paper's revision 1 still has the old misspelling pending the quota reset. The production popup now uses the corrected title too.
 
 ## Run the preview
 
@@ -39,4 +39,4 @@ ffmpeg -y -i artifacts/sakura-video/preview.webm -t 8 -c:v libx264 -pix_fmt yuv4
 
 Checked: actual 360×560 fit, 1× and 2× captures, 12 blossom anchors, changing animation frames, static reduced motion, hidden-page pause, simulated radio/save interaction, disabled loading/saving controls, error and keyboard-focus states, and zero HTTP/HTTPS requests. A revision-2 cloud Chromium sample measured mean draw cost about **0.74 ms**, maximum **0.8 ms** across 20 samples (not a hardware-independent guarantee). Revision 1 Paper frames were checked with Paper screenshots; revision 2 could not be applied or verified there because of the weekly quota.
 
-The Paper state drawings are not interactive HTML controls. The prototype uses native radios, but persistence and two live Calendar-tab updates remain the responsibility of the existing extension and must be retested when this design is integrated. No claim of live-extension animation verification is made at this design-only stage.
+The Paper state drawings are not interactive HTML controls. The prototype uses native radios, but persistence and real settings belong to the production extension. See `tests/popup.cjs` for current unpacked-extension motion/settings verification and the root README for the distinction between controlled Calendar fixtures and live Calendar checks.

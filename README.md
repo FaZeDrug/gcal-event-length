@@ -1,57 +1,69 @@
-# Calendar Event Length
+# Google Calendar Event Length
 
-A small Manifest V3 extension that adds `2h 21m` or `(2 hr 21 min)` beside the time text of supported Google Calendar event blocks. Plain JavaScript/CSS, no build step, backend, external APIs, or analytics. Calendar content scripts run only on `https://calendar.google.com/*`. Local extension storage holds the style preference, not event data.
+**See how long an event lasts, right beside its time.**
 
-**Status: version 0.3.0 makes all labels inline and adds a basic style popup, verified with the real extension in Chromium fixture tests.** Earlier versions were verified on live Calendar, but this release's new behavior has not yet been rechecked there. Google can change this unsupported DOM integration in future. See [the design specification](DESIGN-SPEC.md) for the popup, formatting, states, and mockup checklist.
+An independent Chrome extension for Google Calendar's Day and Week views. Choose an outlined duration badge or simple parentheses from a small, animated sakura popup.
 
-## Install locally
+<img src="docs/images/popup.png" width="360" height="560" alt="The extension's sakura popup, with a Show durations on/off switch and Outlined box and Parentheses style choices">
 
-1. Download this repository (or extract the supplied ZIP).
-2. Open `chrome://extensions` in Chrome and enable **Developer mode**.
-3. Click **Load unpacked** and select the `extension` folder, which contains `manifest.json`. Do not select the repository root.
-4. Refresh Google Calendar and explicitly select **Day** or **Week** view.
+*Screenshot of the real unpacked extension popup, at its actual 360 × 560 size.*
 
-No Node installation or account authorization is required to install the extension. Your existing Calendar sign-in is used only by Calendar itself. After code updates, click **Reload** on the extension card and refresh Calendar. Disable/remove the extension there and refresh Calendar to remove its labels.
+## What it does
 
-## Change the duration style
+- Turns `9:11–11:32pm` into **`2h 21m`** or **`(2 hr 21 min)`**—no mental math.
+- Puts durations **beside the time**, including tall events and events with locations.
+- Uses black or white for contrast, and hides the label when it cannot fit without covering the original time.
+- Saves your style choice locally and updates open Calendar tabs automatically.
+- Adds gentle dithered sakura motion **only inside the popup**. Reduced-motion preferences produce a static scene; closing or hiding the popup stops animation.
 
-Click Chrome's **Extensions** puzzle-piece menu, then **Calendar Event Length** (or pin it and click its toolbar icon). Choose **Outlined box** or **Parentheses**. Changes save automatically and update open Calendar tabs. Box is the default; parentheses use exact minutes, such as `(1 hr 30 min)`, not rounded decimal hours. Preferences persist locally in your Chrome profile. Version 0.3.0 adds the `storage` permission; approve it if Chrome asks when updating.
+No backend, external API, analytics, or separate sign-in. Not affiliated with or endorsed by Google.
 
-## Local interactive demo
+## Install it now
 
-With Node 22 or later:
+This project is currently distributed as an unpacked extension; it has not been published to the Chrome Web Store.
 
-```sh
-npm run demo
-```
+1. Extract the **install ZIP**, or download this repository.
+2. In Chrome, open **`chrome://extensions`** and turn on **Developer mode**.
+3. Click **Load unpacked**. Select the folder containing `manifest.json`: `google-calendar-event-length` from the install ZIP, or `extension/` from the repository. Do not select the repository root.
+4. Refresh Google Calendar and select **Day** or **Week**.
+5. Click Chrome's **Extensions** puzzle-piece icon → **Google Calendar Event Length**. Pin it if you want the popup one click away.
+6. Use **Show durations** to turn labels **On** or **Off**, and choose **Outlined box** or **Parentheses**. There is no Save button: each change saves immediately and updates open Calendar tabs without a refresh. Turning durations off removes every label; turning them back on restores them in your chosen style.
 
-Open `http://localhost:4173`. No dependency installation is needed for this demo. It provides edit, view-switch, DOM-replacement, click, and drag controls. This is an explicitly synthetic fixture using the same content script and CSS; it is **not** a replica or capture of live Google Calendar. The demo loads scripts directly, so the extension does not need localhost permission. The local development server is not part of the extension or a production backend.
+**Already installed an earlier version?** Replace the files in the same extension folder, click **Reload** on its Chrome extension card, and refresh Calendar. This loads the new popup without changing the extension's ID or clearing your preference. Moving to a different folder can create a second installation; disable/remove the old one to avoid duplicate extensions.
 
-## Behavior and deliberate limits
+**“Manifest file is missing”?** You selected the wrong folder. Open it and select the inner folder that actually contains `manifest.json`.
 
-- Operates on explicit `/r/day` and `/r/week` routes, including dated routes. Other views and the initial route before Calendar redirects are skipped.
-- Requires exactly one recognized, standalone time-range element per event block inside Calendar's main region. Dialogs, unsupported markup, all-day labels, and multiple time fields are skipped.
-- Supports English AM/PM, `noon`, `midnight`, and colon-separated 24-hour times. `9:11–11:32pm` gives `2h 21m`; `12am–1am` gives `1h`.
-- A shared trailing period, as in `9–10pm`, applies to both endpoints only when the result is positive. `11–1pm` is skipped rather than guessing the start period. Unmarked `9–10` is also skipped.
-- Reverse/equal ranges are skipped. Overnight, multi-day, time-zone/DST elapsed-time calculations, non-English time words, and date-bearing ranges are not supported. These labels represent same-day wall-clock differences, not API-derived elapsed time.
-- Batches DOM changes, updates reused nodes, removes stale/duplicate labels, and checks URL changes every 500 ms without patching Calendar's history methods. The observer disconnects during its own writes, preventing self-triggered loops.
-- Label text and its box outline are pure black or white, whichever has higher contrast against the composited background color. The inside stays transparent, so there is no gray or tinted fill. Background images/gradients are not sampled.
-- Every duration goes to the right of the time, even on tall events without a location. If the inline label cannot fit, it is hidden instead of wrapping, truncating the original time, or clipping. Events that only show a start time still cannot be labeled safely.
-- On initial load, labels wait for 250 ms without DOM updates (at most two seconds) so they are not repeatedly inserted into Calendar's transient startup DOM. Later updates run before the next animation-frame paint instead of after an 80 ms timer. Measurement no longer toggles every existing badge through hidden/below/inline states; unchanged badges receive no layout/color writes. This intentionally trades a brief initial delay for stable appearance.
-- A ResizeObserver and window/font change listeners recheck layout after resizing. Labels have no event handlers, are hidden from accessibility naming, and cannot receive pointer events. Existing content and handlers are preserved; the extension does not resize Calendar blocks.
+## What is—and isn't—supported
 
-## Selector evidence
+| Supported | Deliberately skipped |
+| --- | --- |
+| Timed events in explicit Day/Week views | All-day events and other views |
+| English AM/PM, 24-hour times, noon/midnight | Unsupported locale formats |
+| Same-day ranges with unambiguous start/end times | Overnight, multi-day, reversed, or ambiguous ranges |
+| Exact hours and minutes | Time-zone/DST-aware elapsed-time calculations |
+| Updating labels after DOM changes and navigation | Events displaying only a start time |
 
-The adapter intentionally isolates the fragile selectors at the top of `extension/content.js`:
+If a label doesn't fit, it disappears rather than resizing the event or truncating its time. Google Calendar's markup is not a public extension API and may change. If labels stop appearing, a redacted **Copy outerHTML** sample of an event block helps diagnose the selector without sharing your login.
 
-- Event roots: `[data-eventid][role="button"]` and direct-child buttons, supported by [calblend's selectors](https://github.com/avelino/calblend/blob/2c7af04a9bccff84429ae7c7da44c444706d87f0/src/selectors.ts).
-- Time text: `.gVNoLb.EiZ8Dd`, observed on an authenticated Calendar test event on October 11, 2026. The older [Event Durations extension](https://github.com/adridesweb/event-durations-google-calendar/blob/5666d4aba61f99e61e4da4f7bece6fc7a7730dab/content.js) additionally required `Jmftzc`; current Calendar no longer uses that class on the observed time element.
+## Privacy and permissions
 
-The demo is synthetic. `tests/fixtures/current-event.html` preserves the inspected test event's class/child structure with identifiers and calendar name redacted, wrapped in a minimal main element. Inline colors in that regression fixture simulate the observed inherited-color mismatch. No third-party implementation code is bundled. We do not scan arbitrary event titles for time-looking text or infer durations from pixel heights.
+The extension reads supported Calendar event time text and nearby DOM metadata **locally**, to calculate durations and identify eligible blocks. Event content is not saved or transmitted. Only your `durationEnabled` (on/off) and `durationStyle` preferences are saved in Chrome's local extension storage.
 
-If no labels appear, the smallest useful input is **Copy outerHTML** of one real timed event block from Chrome DevTools, including its time descendants. Redact the event title, identifiers, and private content while retaining element structure/classes and time text. This allows a targeted adapter update without sharing a login. All-day and Day/Week samples improve coverage.
+- **Site access:** `https://calendar.google.com/*` only.
+- **`storage`:** remembers whether durations are on and which style you chose, and updates other open Calendar tabs.
+- Fonts, illustration, scripts, and fallback artwork are packaged locally; there are no remote assets.
 
-## Tests
+Read the [privacy policy](PRIVACY.md). The sakura illustration is decorative and cannot intercept clicks or keyboard focus.
+
+## Publish your own copy
+
+Start with the [Chrome Web Store publishing guide](docs/PUBLISHING.md). It includes a step-by-step checklist, account requirements, package selection, privacy disclosures, reviewer instructions, and update instructions.
+
+The [ready-to-use listing copy](docs/STORE-LISTING.md) includes the description, single-purpose statement, and permission explanations. Publishing still requires **your developer account, registration payment, privacy declarations, and explicit submission**; this repository does not do those for you.
+
+## Develop and test
+
+The extension needs no build step. For tests, use Node 22+:
 
 ```sh
 npm ci
@@ -60,27 +72,35 @@ npm test
 npm run test:browser
 ```
 
-On a minimal Linux system, use `npx playwright install --with-deps chromium`. Playwright is a development-only dependency; nothing from `node_modules` ships in `extension/`.
+On a minimal Linux machine, install browser system dependencies with `npx playwright install --with-deps chromium`.
 
-Verified locally:
+To build both release ZIPs with Python 3:
 
-- 38 parser/manifest tests, including noon, midnight, 12/24-hour input, invalid times, ambiguous ranges, both duration formats, and host scope.
-- Browser tests of synthetic DOM edits, text-node changes, replacement, duplicate cleanup, view navigation, pointer pass-through, and an actual mouse drag reaching the fixture's original handler.
-- Loading the real unpacked MV3 extension into Chromium and automatic injection on a **network-intercepted, synthetic** Calendar-origin page; absence of injection on a different origin.
-- Visual inspection of the local demo. `artifacts/demo.png` is generated by the browser test.
-- A regression test loading the current, redacted event structure through the real extension, checking its `1h` label, text updates, and color.
-- Version 0.2.0 layout/contrast fixture covers black and light backgrounds, text/outline colors, short/tall/narrow blocks, and changes in event height and background. `artifacts/badge-layout.png` shows the local layout fixture.
-- Browser regressions simulate repeated initial DOM replacements and assert that badges do not appear before settling. They also check zero badge attribute writes during unrelated DOM churn and inline placement regardless of location or height.
-- The actual popup saves both styles, retains selection when reopened, updates two fixture Calendar tabs, and preserves the preference across page reloads. Screenshots are generated at `artifacts/popup.png` and `artifacts/parentheses-layout.png`.
+```sh
+python3 scripts/package.py
+```
 
-Verified live on the owner's Chrome: installed extension reloaded as version 0.1.1; the `1:30–2:30pm` test event displays `1h`; other visible ranges display `45m` and `1h 30m`; switching Week → Day → Week preserves the labels; clicking the labeled test event still opens its details. No event data was edited.
+Outputs go to `artifacts/`:
 
-Not verified live: event edits, dragging/resizing, all-day detection across locales, time-format setting changes, or every Calendar layout. Those checks remain separate from the passing automated fixture tests.
+- `*-install.zip`: extract it and load the resulting folder in Chrome.
+- `*-store.zip`: upload this ZIP directly to the Web Store; `manifest.json` is at its root.
 
-## Before calling live compatibility verified
+`npm run demo` starts the **synthetic Calendar fixture** at `http://localhost:4173`. It is not live Google Calendar. `design-preview/` preserves the original design sandbox; the shipped popup lives in `extension/`.
 
-Use a test calendar to confirm `9:11–11:32pm`, noon/midnight and 24-hour events, all-day/ambiguous skips, week/date navigation, event-time edits, dragging/resizing, clicking and keyboard activation, and short-block clipping. Check that no duplicate or stale labels remain. Do not add credentials or captured private calendar data to this repository.
+## Verification
 
-## Project setup
+The test suite covers time parsing, manifest scope, duplicate/stale-label cleanup, inline fit, contrast, navigation, and actual MV3 injection on controlled Calendar-origin fixtures. It loads the real popup and checks both style choices, persistence after reopening, instant changes in two supported fixture tabs, keyboard focus, loading/saving/error states, motion, reduced motion, hidden-page pausing, fallback artwork, dimensions, and absence of remote requests.
 
-Runtime files require no install/build. The demo uses Node's standard library. Tests use the locked Playwright dependency and its Chromium download. No shared Capy Setup, environment variables, or snapshot settings were changed; the commands above reproduce the tested development environment.
+Earlier versions were inspected on live Google Calendar for Day/Week labels, navigation, and clicking. **This release's automated Calendar checks use controlled fixtures**, not a fresh live Calendar session. Before publishing, run the manual checklist in [PUBLISHING.md](docs/PUBLISHING.md), especially real event edits and drag/resize behavior.
+
+## Project layout
+
+```text
+extension/       Installable Manifest V3 extension
+tests/           Parser, Calendar-fixture, and real-popup tests
+docs/            Screenshots, store copy, and publishing guide
+scripts/         Demo server and ZIP packaging
+design-preview/  Historical, standalone sakura design sandbox
+```
+
+The popup uses the locally bundled Inter font; its licenses are in `extension/fonts/`. No React or shader dependency is required.
