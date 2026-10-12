@@ -135,6 +135,7 @@ const server = require('../scripts/demo.cjs');
     await isolated.waitForFunction(() => document.querySelector('#location [data-calendar-length]').dataset.layout === 'inline');
     await isolated.locator('#short').evaluate((node) => { node.style.height = '110px'; node.style.backgroundColor = 'black'; });
     await isolated.waitForFunction(() => document.querySelector('#short [data-calendar-length]')?.dataset.layout === 'inline');
+    await isolated.waitForFunction(() => getComputedStyle(document.querySelector('#short [data-calendar-length]')).color === 'rgb(255, 255, 255)');
     assert.equal(await isolated.locator('#short [data-calendar-length]').evaluate((node) => getComputedStyle(node).color), 'rgb(255, 255, 255)');
     await isolated.locator('#short').evaluate((node) => { node.style.height = '54px'; });
     await isolated.waitForFunction(() => document.querySelector('#short [data-calendar-length]')?.dataset.layout === 'inline');
