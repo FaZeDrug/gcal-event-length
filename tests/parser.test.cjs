@@ -26,10 +26,17 @@ test('compact duration formatting', () => {
   assert.equal(format(45), '45m');
 });
 
+test('parenthesized exact-minute formatting', () => {
+  assert.equal(format(60, 'text'), '(1 hr)');
+  assert.equal(format(141, 'text'), '(2 hr 21 min)');
+  assert.equal(format(45, 'text'), '(45 min)');
+});
+
 test('manifest is MV3 with only Calendar content access', () => {
   const manifest = require('../extension/manifest.json');
   assert.equal(manifest.manifest_version, 3);
   assert.deepEqual(manifest.content_scripts[0].matches, ['https://calendar.google.com/*']);
-  assert.equal(manifest.permissions, undefined);
+  assert.deepEqual(manifest.permissions, ['storage']);
+  assert.equal(manifest.action.default_popup, 'popup.html');
   assert.equal(manifest.background, undefined);
 });

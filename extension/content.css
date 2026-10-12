@@ -16,7 +16,7 @@
   user-select: none !important;
 }
 
-[data-calendar-length][data-layout="below"] { margin-top: 2px; }
+[data-calendar-length][data-style="text"] { border: 0; padding: 0; border-radius: 0; }
 [data-calendar-length-inline] { display: inline-block !important; width: auto !important; vertical-align: top; }
 [data-calendar-length][data-layout="inline"] { display: inline-block; margin: 0 0 0 4px; vertical-align: top; }
 [data-calendar-length][data-layout="hidden"] { display: none; }

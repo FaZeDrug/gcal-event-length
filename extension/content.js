@@ -9,6 +9,8 @@
   let started = false;
   let settleTimer;
   let startupLimit;
+  let durationStyle = 'box';
+  let preferencesReady = !globalThis.chrome?.storage?.local;
   const sizedEvents = new Set();
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = 1;
@@ -61,32 +63,23 @@
           badge.style.color = color;
           badge.dataset.color = color;
         }
-        if (badge.textContent !== format(minutes)) badge.textContent = format(minutes);
+        if (badge.dataset.style !== durationStyle) badge.dataset.style = durationStyle;
+        const font = durationStyle === 'text' ? getComputedStyle(times[0]).font : '';
+        if (badge.style.font !== font) badge.style.font = font;
+        if (badge.textContent !== format(minutes, durationStyle)) badge.textContent = format(minutes, durationStyle);
         const timeRect = times[0].getBoundingClientRect();
         const eventRect = event.getBoundingClientRect();
         const parentRect = times[0].parentElement.getBoundingClientRect();
         const badgeStyle = getComputedStyle(badge);
         colors.font = `${badgeStyle.fontWeight} ${badgeStyle.fontSize} ${badgeStyle.fontFamily}`;
-        const badgeWidth = Math.ceil(colors.measureText(badge.textContent).width) + 8;
-        const badgeHeight = 17;
+        const badgeWidth = Math.ceil(colors.measureText(badge.textContent).width) + (durationStyle === 'box' ? 8 : 0);
+        const badgeHeight = (parseFloat(badgeStyle.lineHeight) || parseFloat(badgeStyle.fontSize) * 1.2) + (durationStyle === 'box' ? 2 : 0);
         const bottom = eventRect.bottom - parseFloat(getComputedStyle(event).paddingBottom || 0);
         const available = Math.min(parentRect.right, eventRect.right - parseFloat(getComputedStyle(event).paddingRight || 0)) - timeRect.left;
-        const hasLocation = [...event.querySelectorAll('.K9QN7e.EiZ8Dd')].some((node) =>
-          node.closest(eventSelector) === event && node.textContent.trim() && node.getClientRects().length && getComputedStyle(node).display !== 'none'
-        );
-        let layout = 'below';
-        if (hasLocation || bottom - timeRect.bottom < badgeHeight + 2) {
-          const range = document.createRange();
-          range.selectNodeContents(times[0]);
-          const textWidth = range.getBoundingClientRect().width;
-          if (textWidth + badgeWidth + 6 <= available && timeRect.top + badgeHeight <= bottom) {
-            layout = 'inline';
-          } else {
-            layout = 'hidden';
-          }
-        } else if (badgeWidth > available) {
-          layout = 'hidden';
-        }
+        const range = document.createRange();
+        range.selectNodeContents(times[0]);
+        const textWidth = range.getBoundingClientRect().width;
+        const layout = textWidth + badgeWidth + 6 <= available && timeRect.top + badgeHeight <= bottom ? 'inline' : 'hidden';
         if (times[0].hasAttribute('data-calendar-length-inline') !== (layout === 'inline')) times[0].toggleAttribute('data-calendar-length-inline', layout === 'inline');
         if (badge.dataset.layout !== layout) badge.dataset.layout = layout;
         if (!sizedEvents.has(event)) {
@@ -126,7 +119,7 @@
   }
 
   function start() {
-    if (started) return;
+    if (started || !preferencesReady) return;
     started = true;
     clearTimeout(settleTimer);
     clearTimeout(startupLimit);
@@ -135,6 +128,21 @@
 
   const observer = new MutationObserver(schedule);
   const resizeObserver = new ResizeObserver(schedule);
+  if (!preferencesReady) {
+    let changed = false;
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== 'local' || !changes.durationStyle) return;
+      changed = true;
+      durationStyle = changes.durationStyle.newValue === 'text' ? 'text' : 'box';
+      schedule();
+    });
+    chrome.storage.local.get('durationStyle').then((settings) => {
+      if (!changed) durationStyle = settings.durationStyle === 'text' ? 'text' : 'box';
+    }).catch(() => {}).finally(() => {
+      preferencesReady = true;
+      schedule();
+    });
+  }
   let lastPath = location.pathname;
   setInterval(() => {
     if (location.pathname !== lastPath) {

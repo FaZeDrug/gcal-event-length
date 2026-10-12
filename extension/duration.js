@@ -32,7 +32,10 @@
     return result > 0 ? result : null;
   }
 
-  function format(minutes) {
+  function format(minutes, style = 'box') {
+    if (style === 'text') {
+      return `(${[minutes >= 60 ? `${Math.floor(minutes / 60)} hr` : '', minutes % 60 ? `${minutes % 60} min` : ''].filter(Boolean).join(' ')})`;
+    }
     return [minutes >= 60 ? `${Math.floor(minutes / 60)}h` : '', minutes % 60 ? `${minutes % 60}m` : ''].filter(Boolean).join(' ');
   }
 
