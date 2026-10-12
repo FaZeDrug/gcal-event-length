@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sakura popup — design study, not installed extension</title>
+<link rel="stylesheet" href="style.css">
+<script src="scene.js" defer></script>
+<script src="preview.js" defer></script>
+<body>
+<aside>Design study · 360 × 560 CSS px · not the installed extension</aside>
+<main class="popup">
+  <div class="ornament" aria-hidden="true"><img class="poster" src="poster.svg" alt=""><canvas width="300" height="170"></canvas></div>
+  <header><h1>Google Calender<br>Event Length</h1><p>Show event durations beside the time<br>in Google Calendar.</p></header>
+  <fieldset><legend>Duration style</legend>
+    <label><input type="radio" name="style" value="box" checked><span>Outlined box</span><b>1h</b></label>
+    <label><input type="radio" name="style" value="text"><span>Parentheses</span><i>(1 hr)</i></label>
+  </fieldset>
+  <p class="status" role="status">Preferences saved on this device.</p>
+  <footer>Changes apply automatically to open Calendar tabs.<br>Day and Week views only.</footer>
+</main>
+<aside>Preview only: radio changes simulate saving; no Chrome settings or Calendar data are changed.<br>Use ?state=loading, saving, saved, error, load-error, or focus to inspect a state. Reduced motion follows your system preference.</aside>
+</body>
+</html>
