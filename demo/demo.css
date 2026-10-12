@@ -1,0 +1,25 @@
+* { box-sizing: border-box; }
+body { margin: 0 auto; padding: 40px; max-width: 1280px; background: #f5f5f0; color: #243d36; font: 15px/1.5 system-ui, sans-serif; }
+.eyebrow { color: #54766a; font-size: 11px; font-weight: 700; letter-spacing: 2px; }
+h1 { font-size: 44px; line-height: 1.1; letter-spacing: -1.5px; margin: 16px 0; }
+header p { color: #64716b; }
+aside { margin: 24px 0; padding: 14px 18px; background: #e7ece4; border-left: 3px solid #6a8979; font-size: 13px; }
+nav { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+button { cursor: pointer; border: 1px solid #cbd5ca; border-radius: 8px; padding: 9px 14px; color: #243d36; background: white; font: inherit; }
+#status { font-size: 12px; color: #64716b; margin-left: auto; }
+main { background: white; border: 1px solid #d9dfd5; border-radius: 14px; overflow: hidden; }
+.heading { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; border-bottom: 1px solid #e6eae3; }
+h2 { font-size: 19px; margin: 0; }
+.heading span { font-size: 12px; color: #64716b; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.day { border-right: 1px solid #e6eae3; min-height: 320px; padding: 18px; background: repeating-linear-gradient(white 0 79px, #f1f3ee 79px 80px); }
+.day h3 { font-size: 12px; font-weight: 500; margin: 0 0 24px; color: #687b70; }
+.event { position: relative; cursor: grab; overflow: hidden; padding: 10px; border-radius: 7px; background: #d5e9dc; color: #1f503e; min-height: 105px; font-size: 13px; margin-bottom: 15px; }
+.event strong { display: block; margin-bottom: 3px; }
+.event.purple { background: #e4def4; color: #513b76; }
+.event.blue { background: #dce9f5; color: #365f81; }
+.event.gray { background: #eef0eb; color: #687064; }
+[data-calendar-length] { margin-top: 6px; }
+footer { margin-top: 20px; font-size: 12px; color: #687b70; }
+.grid.day-view { grid-template-columns: 1fr; }
+@media(max-width: 700px) { body { padding: 20px; } .grid { grid-template-columns: 1fr 1fr; } h1 { font-size: 34px; } }

@@ -1,0 +1,12 @@
+{
+  "name": "gcal-event-length",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "demo": "node scripts/demo.cjs",
+    "test:browser": "node tests/browser.cjs"
+  },
+  "engines": { "node": ">=22" },
+  "devDependencies": { "playwright": "1.58.2" }
+}
