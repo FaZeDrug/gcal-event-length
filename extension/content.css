@@ -5,8 +5,9 @@
   box-sizing: border-box;
   padding: 0 3px;
   border-radius: 3px;
-  background: rgb(0 0 0 / 15%);
-  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+  color: #000;
   font: 600 11px/15px Arial, sans-serif;
   white-space: nowrap;
   overflow: hidden;
@@ -14,3 +15,8 @@
   pointer-events: none !important;
   user-select: none !important;
 }
+
+[data-calendar-length][data-layout="below"] { margin-top: 2px; }
+[data-calendar-length-inline] { display: inline-block !important; width: auto !important; vertical-align: top; }
+[data-calendar-length][data-layout="inline"] { display: inline-block; margin: 0 0 0 4px; vertical-align: top; }
+[data-calendar-length][data-layout="hidden"] { display: none; }
