@@ -103,6 +103,7 @@ const server = require('../scripts/demo.cjs');
     await isolated.waitForFunction(() => document.querySelector('#short [data-calendar-length]')?.dataset.layout === 'inline');
     assert.equal(await isolated.locator('#tall [data-calendar-length]').getAttribute('data-layout'), 'below');
     assert.equal(await isolated.locator('#narrow [data-calendar-length]').getAttribute('data-layout'), 'hidden');
+    assert.equal(await isolated.locator('#location [data-calendar-length]').getAttribute('data-layout'), 'inline');
     for (const [id, color] of [['short', 'rgb(0, 0, 0)'], ['dark', 'rgb(255, 255, 255)']]) {
       const badge = isolated.locator(`#${id} [data-calendar-length]`);
       assert.deepEqual(await badge.evaluate((node) => {
@@ -117,6 +118,21 @@ const server = require('../scripts/demo.cjs');
       assert.equal(contained, true);
     }
     await isolated.screenshot({ path: 'artifacts/badge-layout.png', fullPage: true });
+    await isolated.evaluate(() => {
+      window.badgeWrites = 0;
+      new MutationObserver((records) => {
+        window.badgeWrites += records.filter((record) => record.target.matches?.('[data-calendar-length], [data-calendar-length-inline]')).length;
+      }).observe(document.body, { subtree: true, attributes: true, childList: true });
+    });
+    for (let index = 0; index < 5; index++) {
+      await isolated.evaluate(() => document.body.classList.toggle('unrelated-update'));
+      await isolated.waitForTimeout(40);
+    }
+    assert.equal(await isolated.evaluate(() => window.badgeWrites), 0);
+    await isolated.locator('#location .K9QN7e').evaluate((node) => { node.textContent = ''; });
+    await isolated.waitForFunction(() => document.querySelector('#location [data-calendar-length]').dataset.layout === 'below');
+    await isolated.locator('#location .K9QN7e').evaluate((node) => { node.textContent = 'Example venue'; });
+    await isolated.waitForFunction(() => document.querySelector('#location [data-calendar-length]').dataset.layout === 'inline');
     await isolated.locator('#short').evaluate((node) => { node.style.height = '110px'; node.style.backgroundColor = 'black'; });
     await isolated.waitForFunction(() => document.querySelector('#short [data-calendar-length]')?.dataset.layout === 'below');
     assert.equal(await isolated.locator('#short [data-calendar-length]').evaluate((node) => getComputedStyle(node).color), 'rgb(255, 255, 255)');
@@ -126,6 +142,24 @@ const server = require('../scripts/demo.cjs');
     await isolated.waitForFunction(() => document.querySelector('#short [data-calendar-length]')?.dataset.layout === 'hidden');
     await isolated.locator('#short').evaluate((node) => { node.style.width = '300px'; });
     await isolated.waitForFunction(() => document.querySelector('#short [data-calendar-length]')?.dataset.layout === 'inline');
+    const loading = fixture + `<script>
+      window.earlyBadge = false;
+      const main = document.querySelector('main');
+      const original = main.innerHTML;
+      const end = performance.now() + 450;
+      function sample() {
+        if (performance.now() < end) {
+          if (document.querySelector('[data-calendar-length]')) window.earlyBadge = true;
+          requestAnimationFrame(sample);
+        }
+      }
+      requestAnimationFrame(sample);
+      for (const delay of [100, 200, 350]) setTimeout(() => { main.innerHTML = original; }, delay);
+    </script>`;
+    await isolated.route('https://calendar.google.com/**', (route) => route.fulfill({ contentType: 'text/html', body: loading }));
+    await isolated.goto('https://calendar.google.com/calendar/u/0/r/week');
+    await isolated.waitForFunction(() => document.querySelector('[data-calendar-length]')?.textContent === '2h 21m');
+    assert.equal(await isolated.evaluate(() => window.earlyBadge), false);
     await isolated.route('https://example.org/**', (route) => route.fulfill({ contentType: 'text/html', body: fixture }));
     await isolated.goto('https://example.org/');
     await isolated.waitForTimeout(700);

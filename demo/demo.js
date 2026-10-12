@@ -6,7 +6,7 @@ let next = false;
 function render() {
   grid.innerHTML = `
     <section class="day"><h3>MON ${next ? '19' : '12'}</h3><div class="event" data-eventid="sample-evening" role="button" tabindex="0" draggable="true"><strong>Evening focus</strong><div class="Jmftzc gVNoLb EiZ8Dd">9:11–11:32pm</div></div></section>
-    <section class="day"><h3>TUE ${next ? '20' : '13'}</h3><div class="event purple" data-eventid="sample-noon" role="button" tabindex="0" draggable="true"><strong>Lunch & a walk</strong><div class="Jmftzc gVNoLb EiZ8Dd">12pm–1pm</div></div></section>
+    <section class="day"><h3>TUE ${next ? '20' : '13'}</h3><div class="event purple" data-eventid="sample-noon" role="button" tabindex="0" draggable="true"><strong>Lunch & a walk</strong><div class="Jmftzc gVNoLb EiZ8Dd">12pm–1pm</div><div class="K9QN7e EiZ8Dd">Example café</div></div></section>
     <section class="day"><h3>WED ${next ? '21' : '14'}</h3><div class="event blue" data-eventid="sample-24h" role="button" tabindex="0" draggable="true"><strong>Design review</strong><div class="Jmftzc gVNoLb EiZ8Dd">14:00–14:45</div></div></section>
     <section class="day"><h3>THU ${next ? '22' : '15'}</h3><div class="event gray" data-eventid="sample-all-day" role="button" tabindex="0"><strong>Out of office</strong><div class="Jmftzc gVNoLb EiZ8Dd">All day</div></div><div class="event gray" data-eventid="sample-ambiguous" role="button" tabindex="0"><strong>Ambiguous time · skipped</strong><div class="Jmftzc gVNoLb EiZ8Dd">11–1</div></div></section>`;
   edited = false;
