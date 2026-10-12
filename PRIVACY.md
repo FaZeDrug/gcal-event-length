@@ -1,6 +1,6 @@
 # Privacy policy — Google Calendar Event Length
 
-Effective date: October 12, 2026. Applies to version 0.4.0.
+Effective date: October 12, 2026. Applies to version 0.5.0.
 
 Google Calendar Event Length is an independent browser extension and is not affiliated with or endorsed by Google.
 
@@ -8,7 +8,7 @@ Google Calendar Event Length is an independent browser extension and is not affi
 
 The extension accesses Google Calendar page content on `https://calendar.google.com/*`. It reads displayed event time ranges and nearby event metadata/DOM attributes to identify supported event blocks, calculate durations, choose contrasting text, and position labels. This processing happens locally in your browser. Calendar content is not saved by the extension or transmitted to the developer or any third party.
 
-The popup saves one preference, `durationStyle` (`box` or `text`), using Chrome's local extension storage. It is used only to remember the display style and notify other open Calendar tabs of changes. This preference is not synced by the extension to other devices and is not transmitted to the developer.
+The popup saves two preferences using Chrome's local extension storage: `durationEnabled` (`true` or `false`) and `durationStyle` (`box` or `text`). They are used only to remember whether durations are shown and in which style, and notify other open Calendar tabs of changes. These preferences are not synced by the extension to other devices and is not transmitted to the developer.
 
 ## What we do not collect or share
 

@@ -4,7 +4,7 @@
 
 An independent Chrome extension for Google Calendar's Day and Week views. Choose an outlined duration badge or simple parentheses from a small, animated sakura popup.
 
-<img src="docs/images/popup.png" width="360" height="560" alt="The extension's sakura popup, with Outlined box and Parentheses style choices">
+<img src="docs/images/popup.png" width="360" height="560" alt="The extension's sakura popup, with a Show durations on/off switch and Outlined box and Parentheses style choices">
 
 *Screenshot of the real unpacked extension popup, at its actual 360 × 560 size.*
 
@@ -27,7 +27,7 @@ This project is currently distributed as an unpacked extension; it has not been 
 3. Click **Load unpacked**. Select the folder containing `manifest.json`: `google-calendar-event-length` from the install ZIP, or `extension/` from the repository. Do not select the repository root.
 4. Refresh Google Calendar and select **Day** or **Week**.
 5. Click Chrome's **Extensions** puzzle-piece icon → **Google Calendar Event Length**. Pin it if you want the popup one click away.
-6. Choose **Outlined box** or **Parentheses**. There is no Save button: the choice saves immediately.
+6. Use **Show durations** to turn labels **On** or **Off**, and choose **Outlined box** or **Parentheses**. There is no Save button: each change saves immediately and updates open Calendar tabs without a refresh. Turning durations off removes every label; turning them back on restores them in your chosen style.
 
 **Already installed an earlier version?** Replace the files in the same extension folder, click **Reload** on its Chrome extension card, and refresh Calendar. This loads the new popup without changing the extension's ID or clearing your preference. Moving to a different folder can create a second installation; disable/remove the old one to avoid duplicate extensions.
 
@@ -47,10 +47,10 @@ If a label doesn't fit, it disappears rather than resizing the event or truncati
 
 ## Privacy and permissions
 
-The extension reads supported Calendar event time text and nearby DOM metadata **locally**, to calculate durations and identify eligible blocks. Event content is not saved or transmitted. Only your `durationStyle` preference is saved in Chrome's local extension storage.
+The extension reads supported Calendar event time text and nearby DOM metadata **locally**, to calculate durations and identify eligible blocks. Event content is not saved or transmitted. Only your `durationEnabled` (on/off) and `durationStyle` preferences are saved in Chrome's local extension storage.
 
 - **Site access:** `https://calendar.google.com/*` only.
-- **`storage`:** remembers the selected style and updates other open Calendar tabs.
+- **`storage`:** remembers whether durations are on and which style you chose, and updates other open Calendar tabs.
 - Fonts, illustration, scripts, and fallback artwork are packaged locally; there are no remote assets.
 
 Read the [privacy policy](PRIVACY.md). The sakura illustration is decorative and cannot intercept clicks or keyboard focus.

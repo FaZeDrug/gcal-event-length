@@ -1,6 +1,6 @@
 # Calendar Event Length — design specification
 
-Implementation reference: version 0.4.0. The popup now integrates the approved sakura study: a 360×560 dark-purple surface, contained milky-white vignette, locally rendered dithered blossoms, and native radio controls. Functional scope remains the same two duration styles.
+Implementation reference: version 0.5.0. The popup now integrates the approved sakura study: a 360×560 dark-purple surface, contained milky-white vignette, locally rendered dithered blossoms, a native **Show durations** on/off switch, and native radio controls for the two duration styles.
 
 ## Product in one sentence
 
@@ -42,13 +42,14 @@ Suggested information order, implemented with native HTML controls:
 
 1. Heading: **Google Calendar Event Length**.
 2. Short description: **Show event durations beside the time in Google Calendar.**
-3. Fieldset named **Duration style**, with two mutually exclusive radio choices:
+3. A **Show durations** switch (`checkbox` with `role="switch"`) with a visible **On**/**Off** word. On is the default. Off removes every label from open Calendar tabs and dims the style choices, which stay selectable so the next On uses them.
+4. Fieldset named **Duration style**, with two mutually exclusive radio choices:
    - **Outlined box**, with a boxed `1h` sample.
    - **Parentheses**, with a `(1 hr)` sample.
-4. A status line for loading, saving, saved, or error feedback.
-5. Supporting copy: **Changes apply automatically to open Calendar tabs. Day and Week views only.**
+5. A status line for loading, saving, saved, or error feedback.
+6. Supporting copy: **Changes apply automatically to open Calendar tabs. Day and Week views only.**
 
-Selecting a radio saves immediately. There is no Save/Apply button. Existing supported Calendar tabs update without refreshing. The choice persists across popup closures and page reloads in the same Chrome profile, and is stored on that device, not synced to other devices. The initial default is Outlined box. Unknown saved values fall back to that default.
+Flipping the switch or selecting a radio saves immediately. There is no Save/Apply button. Existing supported Calendar tabs update without refreshing. The choice persists across popup closures and page reloads in the same Chrome profile, and is stored on that device, not synced to other devices. The initial default is Outlined box. Unknown saved values fall back to that default.
 
 The current popup is 360px wide and 560px tall. It uses native radio semantics, visible keyboard focus, readable labels, and a live status region. Decoration is clipped above the heading, aria-hidden, and non-interactive. Reduced motion uses a static scene; animation stops while the popup is hidden or unloaded. Scripts, fonts, icons, and the SVG fallback poster are packaged locally.
 
@@ -56,8 +57,11 @@ The current popup is 360px wide and 560px tall. It uses native radio semantics, 
 
 | State | Control behavior | Feedback |
 | --- | --- | --- |
-| Opening/loading | Radios disabled until the preference loads | “Loading preference…” |
-| Ready, box selected | Box radio checked | “Preferences are saved on this device.” |
+| Opening/loading | Switch and radios disabled until preferences load | “Loading preference…” |
+| Ready, box selected | Box radio checked | “Preferences saved on this device.” |
+| Switched off | Switch shows Off; style cards dimmed but selectable; labels removed from Calendar tabs | “Durations off.” |
+| Switched on | Switch shows On; labels return in the chosen style | “Durations on.” |
+| Switch save error | Switch returns to its previous position | “Could not save. Try the switch again.” |
 | Ready, parentheses selected | Parentheses radio checked | Same ready message |
 | Saving | Radios temporarily disabled | “Saving…” |
 | Saved | Selected radio checked; controls enabled | “Saved.” |
@@ -82,7 +86,7 @@ Skipped: all-day events, zero/reversed ranges, overnight/multi-day events, range
 
 ## Privacy and implementation
 
-Manifest V3; plain JavaScript, HTML, and CSS. Content scripts run only on `https://calendar.google.com/*`. The popup is packaged with the extension. The only additional permission is `storage`, used for the single `durationStyle` preference (`box` or `text`). The extension does not store event content, send calendar data, use analytics, call external APIs, or require a backend or separate login.
+Manifest V3; plain JavaScript, HTML, and CSS. Content scripts run only on `https://calendar.google.com/*`. The popup is packaged with the extension. The only additional permission is `storage`, used for the `durationEnabled` (`true`/`false`) and `durationStyle` (`box`/`text`) preferences. The extension does not store event content, send calendar data, use analytics, call external APIs, or require a backend or separate login.
 
 The extension reads supported DOM structures rather than an official Google Calendar extension API, so Google UI changes can require adapter updates. A Chrome account is needed only for Calendar itself, not for the extension.
 

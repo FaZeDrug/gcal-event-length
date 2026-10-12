@@ -181,6 +181,18 @@ const server = require('../scripts/demo.cjs');
     await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Saved.');
     await isolated.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '(1 hr)');
     await secondCalendar.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '(1 hr)');
+    assert.equal(await popup.locator('#enabled').isChecked(), true);
+    await popup.locator('#enabled').click();
+    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Durations off.');
+    assert.equal(await popup.locator('#state').innerText(), 'Off');
+    for (const tab of [isolated, secondCalendar]) {
+      await tab.waitForFunction(() => !document.querySelector('[data-calendar-length], [data-calendar-length-inline]'));
+    }
+    await popup.locator('#enabled').click();
+    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Durations on.');
+    for (const tab of [isolated, secondCalendar]) {
+      await tab.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '(1 hr)');
+    }
     await secondCalendar.close();
     assert.equal(await isolated.locator('#tall [data-calendar-length]').getAttribute('data-layout'), 'inline');
     assert.equal(await isolated.locator('#tall [data-calendar-length]').evaluate((node) => getComputedStyle(node).borderTopWidth), '0px');
@@ -196,12 +208,25 @@ const server = require('../scripts/demo.cjs');
     await popup.check('input[value="box"]');
     await isolated.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '1h');
     assert.equal(await isolated.locator('#tall [data-calendar-length]').evaluate((node) => getComputedStyle(node).borderTopWidth), '1px');
+    await popup.locator('#enabled').click();
+    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Durations off.');
+    await popup.close();
+    await isolated.reload();
+    await isolated.waitForTimeout(2500);
+    assert.equal(await isolated.locator('[data-calendar-length]').count(), 0);
+    popup = await context.newPage();
+    await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+    await popup.waitForFunction(() => !document.querySelector('#enabled').disabled);
+    assert.equal(await popup.locator('#enabled').isChecked(), false);
+    assert.equal(await popup.locator('input[value="box"]').isChecked(), true);
+    await popup.locator('#enabled').click();
+    await isolated.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '1h');
     await popup.close();
     await isolated.route('https://example.org/**', (route) => route.fulfill({ contentType: 'text/html', body: fixture }));
     await isolated.goto('https://example.org/');
     await isolated.waitForTimeout(700);
     assert.equal(await isolated.locator('[data-calendar-length]').count(), 0);
-    console.log('PASS: synthetic DOM lifecycle, pointer/drag, screenshot, real MV3 injection on intercepted Calendar origin, and no injection on other origins. No live Calendar verified.');
+    console.log('PASS: synthetic DOM lifecycle, pointer/drag, screenshot, real MV3 injection on intercepted Calendar origin, on/off toggle across tabs and reloads, and no injection on other origins. No live Calendar verified.');
   } finally {
     server.close();
     await context.close();

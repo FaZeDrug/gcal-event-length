@@ -1,6 +1,6 @@
 # Chrome Web Store listing copy
 
-Review this before submitting; it describes version 0.4.0, not planned features.
+Review this before submitting; it describes version 0.5.0, not planned features.
 
 ## Name
 
@@ -24,7 +24,7 @@ Choose the style you prefer:
 • Outlined badges, such as “1h 30m”
 • Simple parentheses, such as “(1 hr 30 min)”
 
-Open the extension's sakura-themed popup to switch styles. Your preference saves automatically and updates open Calendar tabs. The popup includes gently animated, dithered cherry blossoms and respects your system's reduced-motion preference.
+Open the extension's sakura-themed popup to turn durations on or off and switch styles. Your preferences save automatically and updates open Calendar tabs. The popup includes gently animated, dithered cherry blossoms and respects your system's reduced-motion preference.
 
 Designed to stay out of your way:
 • Duration text uses black or white for contrast.
@@ -47,11 +47,11 @@ This is an independent extension and is not affiliated with or endorsed by Googl
 
 ## Single-purpose statement
 
-Calculate and display the duration of supported Google Calendar events directly beside their time ranges, with a user-selectable display style.
+Calculate and display the duration of supported Google Calendar events directly beside their time ranges, with a user-selectable display style and an on/off switch.
 
 ## Permission justifications
 
-**storage:** Save the user's duration display style locally and propagate style changes to other open Calendar tabs. No event content is persisted.
+**storage:** Save the user's on/off choice and duration display style locally and propagate changes to other open Calendar tabs. No event content is persisted.
 
 **calendar.google.com site access/content scripts:** Read displayed event time ranges and nearby DOM metadata to identify supported timed event blocks, calculate their durations, and insert non-interactive labels. Processing stays inside the user's browser.
 
@@ -66,6 +66,7 @@ Do **not** declare that the extension never accesses user data. It accesses **we
 1. Install the extension, open Google Calendar using a reviewer-controlled Google account, and select Week or Day view. No extension-specific login is required; do not supply the developer's account credentials.
 2. Create a test event with a same-day range such as 9:11pm–11:32pm and sufficient horizontal width. Confirm the outlined “2h 21m” label beside the time.
 3. Open Google Calendar Event Length from Chrome's Extensions menu. Choose Parentheses and confirm “(2 hr 21 min)” appears in the existing Calendar tab.
-4. Open another supported Calendar tab, change the style, and confirm both tabs update. Close/reopen the popup to verify persistence.
-5. Check a 12pm–1pm event, a 24-hour display, an all-day event, and a very narrow block. Unsupported or non-fitting events should not receive a misleading label.
-6. Enable system reduced motion to see the static popup artwork. The popup animation never runs inside Calendar event labels.
+4. Turn **Show durations** Off and confirm every label disappears from the Calendar tab; turn it On and confirm labels return.
+5. Open another supported Calendar tab, change the style, and confirm both tabs update. Close/reopen the popup to verify persistence.
+6. Check a 12pm–1pm event, a 24-hour display, an all-day event, and a very narrow block. Unsupported or non-fitting events should not receive a misleading label.
+7. Enable system reduced motion to see the static popup artwork. The popup animation never runs inside Calendar event labels.

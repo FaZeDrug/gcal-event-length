@@ -1,6 +1,6 @@
 # Sakura popup study — revision 2, unapproved
 
-This folder preserves the original isolated design/motion prototype. **Version 0.4.0 integrates the approved design in `extension/`.** The native radio inputs in this sandbox still only simulate saving; they do not write `durationStyle` or communicate with Calendar tabs. Use the installed extension to exercise real settings and see the root README for current verification.
+This folder preserves the original isolated design/motion prototype. **Since version 0.4.0, the extension integrates the approved design in `extension/`.** The native radio inputs in this sandbox still only simulate saving; they do not write `durationStyle` or communicate with Calendar tabs. Use the installed extension to exercise real settings and see the root README for current verification.
 
 ## Open the designs
 

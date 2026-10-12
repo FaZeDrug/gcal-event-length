@@ -29,7 +29,7 @@ const os = require('node:os');
     assert.equal(await page.locator('h1').innerText(), 'Google Calendar\nEvent Length');
     assert.equal(await page.locator('body').evaluate((node) => node.scrollWidth), 360);
     assert.equal(await page.locator('body').evaluate((node) => node.scrollHeight), 560);
-    for (const selector of ['h1', 'fieldset', '#status', 'footer']) {
+    for (const selector of ['h1', '.switch', 'fieldset', '#status', 'footer']) {
       assert.equal(await page.locator(selector).evaluate((node) => {
         const r = node.getBoundingClientRect();
         return r.x >= 0 && r.right <= 360 && r.y >= 0 && r.bottom <= 560;
@@ -39,6 +39,15 @@ const os = require('node:os');
     await page.waitForTimeout(8000);
     assert.notEqual(await page.locator('canvas').evaluate((node) => node.toDataURL()), first);
     await page.locator('.popup').screenshot({ path: 'artifacts/sakura-popup.png' });
+    await page.keyboard.press('Tab');
+    assert.equal(await page.locator('#enabled').evaluate((node) => node === document.activeElement), true);
+    assert.equal(await page.locator('#enabled').getAttribute('role'), 'switch');
+    await page.keyboard.press('Space');
+    await page.waitForFunction(() => document.querySelector('#status').textContent === 'Durations off.');
+    assert.equal(await page.locator('#state').innerText(), 'Off');
+    await page.locator('.popup').screenshot({ path: 'artifacts/sakura-off.png' });
+    await page.keyboard.press('Space');
+    await page.waitForFunction(() => document.querySelector('#status').textContent === 'Durations on.');
     await page.keyboard.press('Tab');
     assert.equal(await page.locator('input[value="box"]').evaluate((node) => node === document.activeElement), true);
     assert.equal(await page.locator('input[value="box"]').evaluate((node) => getComputedStyle(node).outlineStyle), 'solid');
@@ -86,8 +95,14 @@ const os = require('node:os');
       } else {
         const expected = { loading: 'Loading preference…', 'load-error': 'Could not load. Reopen to retry.', saving: 'Saving…', 'save-error': 'Could not save. Select a style to retry.' }[state];
         await p.waitForFunction((text) => document.querySelector('#status').textContent === text, expected);
-        assert.equal(await p.locator('input').first().isDisabled(), state !== 'save-error');
+        assert.equal(await p.locator('input[type=radio]').first().isDisabled(), state !== 'save-error');
         assert.equal(await p.locator('#status').evaluate((node) => node.getBoundingClientRect().bottom < document.querySelector('footer').getBoundingClientRect().top), true);
+      }
+      if (state === 'save-error') {
+        await p.click('#enabled');
+        await p.waitForFunction(() => document.querySelector('#status').textContent === 'Could not save. Try the switch again.');
+        assert.equal(await p.locator('#enabled').isChecked(), true);
+        assert.equal(await p.locator('#state').innerText(), 'On');
       }
       await p.screenshot({ path: `artifacts/sakura-${state}.png` });
       await p.close();
@@ -111,7 +126,7 @@ const os = require('node:os');
       await retina.close();
       await fs.rm(retinaProfile, { recursive: true, force: true });
     }
-    console.log('PASS: real unpacked popup, motion, 360×560 fit at 1×/2×, keyboard controls/focus, reduced motion, hidden pause, local poster fallback, controlled loading/save errors, and no remote requests.');
+    console.log('PASS: real unpacked popup, motion, 360×560 fit at 1×/2×, keyboard controls/focus, on/off switch, reduced motion, hidden pause, local poster fallback, controlled loading/save errors, and no remote requests.');
   } finally {
     await context.close();
     await fs.rm(profile, { recursive: true, force: true });

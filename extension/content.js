@@ -10,6 +10,7 @@
   let settleTimer;
   let startupLimit;
   let durationStyle = 'box';
+  let enabled = true;
   let preferencesReady = !globalThis.chrome?.storage?.local;
   const sizedEvents = new Set();
   const canvas = document.createElement('canvas');
@@ -37,7 +38,7 @@
   function refresh() {
     queued = false;
     observer.disconnect();
-    const active = /\/r\/(day|week)(?:\/|$)/.test(location.pathname);
+    const active = enabled && /\/r\/(day|week)(?:\/|$)/.test(location.pathname);
     const kept = new Set();
     if (active) {
       for (const event of document.querySelectorAll(eventSelector)) {
@@ -130,14 +131,22 @@
   const resizeObserver = new ResizeObserver(schedule);
   if (!preferencesReady) {
     let changed = false;
+    let enabledChanged = false;
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area !== 'local' || !changes.durationStyle) return;
-      changed = true;
-      durationStyle = changes.durationStyle.newValue === 'text' ? 'text' : 'box';
+      if (area !== 'local' || (!changes.durationStyle && !changes.durationEnabled)) return;
+      if (changes.durationStyle) {
+        changed = true;
+        durationStyle = changes.durationStyle.newValue === 'text' ? 'text' : 'box';
+      }
+      if (changes.durationEnabled) {
+        enabledChanged = true;
+        enabled = changes.durationEnabled.newValue !== false;
+      }
       schedule();
     });
-    chrome.storage.local.get('durationStyle').then((settings) => {
+    chrome.storage.local.get(['durationStyle', 'durationEnabled']).then((settings) => {
       if (!changed) durationStyle = settings.durationStyle === 'text' ? 'text' : 'box';
+      if (!enabledChanged) enabled = settings.durationEnabled !== false;
     }).catch(() => {}).finally(() => {
       preferencesReady = true;
       schedule();
