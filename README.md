@@ -8,6 +8,14 @@ A published Chrome extension for Google Calendar's Day and Week views. **[Add it
 
 *The real extension popup, recorded at 2× (actual size 300 × 400).*
 
+![Google Calendar events with outlined duration badges beside their times, alongside the extension popup](docs/store-assets/screenshot-1-box.png)
+
+*Outlined box: see event lengths at a glance with compact badges beside each event’s time.*
+
+![Google Calendar events with plain-text durations in parentheses, alongside the extension popup](docs/store-assets/screenshot-2-text.png)
+
+*Parentheses: choose plain-text durations instead. Switch styles in the popup and open Calendar tabs update instantly.*
+
 This version's design is inspired by [this post by @praveenisomer](https://x.com/praveenisomer/status/2032418900298887633). Credit to him for the ASCII idea.
 
 ## What it does
