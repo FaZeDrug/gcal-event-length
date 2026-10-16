@@ -103,6 +103,7 @@ const server = require('../scripts/demo.cjs');
     await isolated.waitForFunction(() => document.querySelector('#short [data-calendar-length]')?.dataset.layout === 'inline');
     assert.equal(await isolated.locator('#tall [data-calendar-length]').getAttribute('data-layout'), 'inline');
     assert.equal(await isolated.locator('#narrow [data-calendar-length]').getAttribute('data-layout'), 'hidden');
+    assert.equal(await isolated.locator('#compact [data-calendar-length]').getAttribute('data-layout'), 'inline', 'Compact event whose time sits on its last line still gets a label');
     assert.equal(await isolated.locator('#location [data-calendar-length]').getAttribute('data-layout'), 'inline');
     for (const [id, color] of [['short', 'rgb(0, 0, 0)'], ['dark', 'rgb(255, 255, 255)']]) {
       const badge = isolated.locator(`#${id} [data-calendar-length]`);

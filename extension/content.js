@@ -80,7 +80,7 @@
         const range = document.createRange();
         range.selectNodeContents(times[0]);
         const textWidth = range.getBoundingClientRect().width;
-        const layout = textWidth + badgeWidth + 6 <= available && timeRect.top + badgeHeight <= bottom ? 'inline' : 'hidden';
+        const layout = textWidth + badgeWidth + 6 <= available && timeRect.top + badgeHeight <= Math.max(bottom, timeRect.bottom) ? 'inline' : 'hidden';
         if (times[0].hasAttribute('data-calendar-length-inline') !== (layout === 'inline')) times[0].toggleAttribute('data-calendar-length-inline', layout === 'inline');
         if (badge.dataset.layout !== layout) badge.dataset.layout = layout;
         if (!sizedEvents.has(event)) {
