@@ -103,6 +103,6 @@ scripts/         Demo server and ZIP packaging
 design-preview/  Historical sakura design sandbox (no longer shipped)
 ```
 
-The popup uses the locally bundled Inter font; its licenses are in `extension/fonts/`. The animation in `extension/calendar.js` is the supplied tear-away calendar script, adapted only to size itself to the popup canvas, pause when hidden, and draw a still frame for reduced motion.
+The popup uses the locally bundled Inter font; its licenses are in `extension/fonts/`. The animation in `extension/calendar.js` is the supplied fixed-grid tear-away ASCII calendar script, adapted only to size itself to the popup canvas, pause when hidden, and draw a still frame for reduced motion.
 
 **Heading font:** the design uses **Daisler Light** (Eko Bimantara). No licensed font file is in this repository, and the free trial is personal-use only, so it is not bundled. The popup uses Daisler Light if it is installed on the computer and otherwise falls back to Georgia. To ship it, buy a license that permits embedding the font in distributed software (a desktop or webfont license alone does not cover that; confirm with the foundry), add the file to `extension/fonts/`, and point the `Daisler` `@font-face` in `popup.css` at it.
