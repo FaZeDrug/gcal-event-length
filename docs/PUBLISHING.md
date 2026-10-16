@@ -40,12 +40,12 @@ Prepare these graphics:
 | Asset | Size | Where to get it |
 | --- | --- | --- |
 | Store icon | 128×128 PNG | `extension/icons/icon128.png` |
-| Screenshot | Prefer 1280×800; at least one | Use the prepared popup artwork in `docs/store-assets/`, and add a sanitized live Calendar screenshot before submission |
+| Screenshots | 1280×800, up to five | `docs/store-assets/screenshot-1-box.png` … `screenshot-4-popup.png` (live Calendar captures; see `docs/store-assets/README.md`) |
 | Small promotional tile | 440×280 PNG/JPEG | `docs/store-assets/promo-440x280.png` |
 | Optional marquee | 1400×560 | Only needed if you choose to supply it |
 | Optional promotional video | YouTube URL | The supplied MP4 can be used to create a video; no upload was performed |
 
-The prepared screenshot artwork incorporates the **real unpacked popup**, not a fake Calendar page. Review it before publishing. Google allows up to five screenshots; its image guidance also accepts 640×400, though 1280×800 is preferred. Follow any current dashboard validation if it differs.
+The screenshots are real captures of the unpacked extension on live Google Calendar, cropped to generic events. Review them before uploading.
 
 ## 5. Complete privacy and testing fields
 
