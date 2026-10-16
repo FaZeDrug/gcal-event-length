@@ -113,8 +113,8 @@
         for (const line of dialog.querySelectorAll('div, span')) {
           if (line.closest(eventSelector) || line.querySelector('div') || line.matches(badgeSelector)) continue;
           const text = [...line.childNodes].filter((node) => !node.matches?.(badgeSelector)).map((node) => node.textContent).join('');
-          const match = /[·⋅•]\s*([^·⋅•]+)$/.exec(text);
-          const minutes = match && duration(match[1]);
+          const match = /^([^·⋅•]*(?:\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b|\b\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b)[^·⋅•]*)[·⋅•]\s*([^·⋅•]+)$/i.exec(text.trim());
+          const minutes = match && duration(match[2]);
           if (!minutes) continue;
           let badge = line.querySelector(':scope > [data-calendar-length]');
           if (!badge) {
@@ -127,6 +127,7 @@
           if (badge.dataset.style !== durationStyle) badge.dataset.style = durationStyle;
           if (badge.textContent !== format(minutes, durationStyle)) badge.textContent = format(minutes, durationStyle);
           kept.add(badge);
+          break;
         }
       }
     }

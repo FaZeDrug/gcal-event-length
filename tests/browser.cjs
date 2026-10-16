@@ -106,11 +106,12 @@ const server = require('../scripts/demo.cjs');
     assert.equal(await isolated.locator('#compact [data-calendar-length]').getAttribute('data-layout'), 'inline', 'Compact event whose time sits on its last line still gets a label');
     assert.equal(await isolated.locator('#tight [data-calendar-length]').getAttribute('data-layout'), 'inline', 'Label shrinks to a 14px time line');
     assert.equal(await isolated.locator('#tight [data-calendar-length]').evaluate((node) => node.getBoundingClientRect().bottom <= node.closest('.event').getBoundingClientRect().bottom + 1), true);
-    for (const [id, text] of [['real15', '15m'], ['real31', '31m'], ['range33', '33m']]) {
+    for (const [id, text] of [['real15', '15m'], ['real31', '31m']]) {
       assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).textContent(), text, `${id} reads its duration`);
       assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).getAttribute('data-layout'), 'inline', `${id} shows its label`);
       assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).evaluate((node) => node.getBoundingClientRect().top >= node.previousElementSibling.getBoundingClientRect().top - 1 && node.getBoundingClientRect().bottom <= node.previousElementSibling.getBoundingClientRect().bottom + 1), true, `${id} label stays on the time line`);
     }
+    assert.equal(await isolated.locator('#range33 [data-calendar-length]').getAttribute('data-layout'), 'hidden', 'A time row clipped by the event bottom gets no label');
     assert.equal(await isolated.locator('#real15narrow [data-calendar-length]').getAttribute('data-layout'), 'hidden', 'Narrow 15 min chip keeps its time and skips the label');
     assert.equal(await isolated.locator('#location [data-calendar-length]').getAttribute('data-layout'), 'inline');
     for (const [id, color] of [['short', 'rgb(0, 0, 0)'], ['dark', 'rgb(255, 255, 255)']]) {
@@ -203,6 +204,9 @@ const server = require('../scripts/demo.cjs');
     }, id);
     await isolated.evaluate(() => document.body.insertAdjacentHTML('beforeend', '<div role="dialog" id="details3" style="font: 14px/20px Arial"><div style="display: flex">Sunday, October 18<span aria-hidden="true">⋅</span>2 – 2:30pm</div></div>'));
     await isolated.waitForFunction(() => document.querySelector('#details3 [data-calendar-length]')?.textContent === '(30 min)');
+    await isolated.evaluate(() => document.body.insertAdjacentHTML('beforeend', '<div role="dialog" id="details4"><div>Monday, October 19<span aria-hidden="true">⋅</span>1 – 2pm</div><div>Office hours · 9am – 5pm</div><div>Lunch ⋅ 12 – 1pm</div></div>'));
+    await isolated.waitForFunction(() => document.querySelector('#details4 [data-calendar-length]')?.textContent === '(1 hr)');
+    assert.equal(await isolated.locator('#details4 [data-calendar-length]').count(), 1, 'Only the event date/time row gets a duration, not description text');
     for (const id of ['details', 'details3']) assert.ok(await detailOffset(id) <= 1.5, `${id} text duration is centered on the time`);
     assert.equal(await popup.locator('#enabled').isChecked(), true);
     await popup.locator('#enabled').click();
