@@ -5,20 +5,20 @@
   <title>Google Calendar Event Length</title>
   <link rel="stylesheet" href="popup.css">
   <script src="popup.js" defer></script>
-  <script src="sakura.js" defer></script>
+  <script src="calendar.js" defer></script>
 </head>
 <body>
   <main class="popup">
-  <div class="ornament" aria-hidden="true"><img class="poster" src="poster.svg" alt=""><canvas width="300" height="170"></canvas></div>
-  <header><h1>Google Calendar<br>Event Length</h1><p>Show event durations beside the time<br>in Google Calendar.</p></header>
-  <label class="switch"><span>Show durations</span><output id="state" aria-hidden="true">On</output><input id="enabled" type="checkbox" role="switch" checked disabled aria-describedby="status"></label>
-  <fieldset disabled aria-describedby="status">
-    <legend>Duration style</legend>
-    <label><input type="radio" name="style" value="box"><span>Outlined box</span><b aria-hidden="true">1h</b></label>
-    <label><input type="radio" name="style" value="text"><span>Parentheses</span><i aria-hidden="true">(1 hr)</i></label>
-  </fieldset>
-  <p id="status" class="status" role="status">Loading preference…</p>
-  <footer>Applies instantly to open Calendar tabs.<br>Day and Week views only.</footer>
+    <canvas id="calendar" aria-hidden="true"></canvas>
+    <h1>Event Duration</h1>
+    <p class="subtitle">Show event lengths in Google Calendar</p>
+    <label class="switch"><span>Show durations</span><input id="enabled" type="checkbox" role="switch" checked disabled aria-describedby="status"></label>
+    <fieldset disabled aria-describedby="status">
+      <legend>Duration style</legend>
+      <label class="option"><input type="radio" name="style" value="box"><span>Outlined box</span><b aria-hidden="true">1h</b></label>
+      <label class="option"><input type="radio" name="style" value="text"><span>Parentheses</span><i aria-hidden="true">(1 hr)</i></label>
+    </fieldset>
+    <p id="status" class="status" role="status">Loading…</p>
   </main>
 </body>
 </html>

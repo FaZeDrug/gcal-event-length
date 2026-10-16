@@ -44,12 +44,22 @@
       for (const event of document.querySelectorAll(eventSelector)) {
         if (!event.closest('[role="main"]') || event.closest('[role="dialog"]')) continue;
         if (/^\s*all[ -]day\b/i.test(event.getAttribute('aria-label') || '')) continue;
-        const times = [...event.querySelectorAll(timeSelector)].filter((node) =>
+        let times = [...event.querySelectorAll(timeSelector)].filter((node) =>
           node.closest(eventSelector) === event && !node.querySelector(timeSelector)
         );
-        const parsed = times.map((node) => duration(node.textContent));
-        if (parsed.length !== 1 || parsed[0] === null) continue;
-        const minutes = parsed[0];
+        if (!times.length) {
+          times = [...event.querySelectorAll('[aria-hidden="true"] *')].filter((node) =>
+            node.closest(eventSelector) === event && !node.children.length && !node.matches(badgeSelector)
+              && /(?:^|,\s*)(?:noon|midnight|\d{1,2}(?::\d{2})?\s*(?:[ap]\.?m\.?)?)$/i.test(node.textContent.trim())
+          ).slice(-1);
+        }
+        if (times.length !== 1) continue;
+        const host = event.closest('[data-eventid]');
+        const minutes = duration(times[0].textContent) || [host, event, ...host.querySelectorAll('*')]
+          .filter((node) => node === host || node === event || (!node.children.length && !node.closest('[aria-hidden="true"]')))
+          .map((node) => duration(((node === host || node === event ? node.getAttribute('aria-label') : node.textContent) || '').split(',')[0]))
+          .find(Boolean);
+        if (!minutes) continue;
         let badge = event.querySelector(badgeSelector);
         if (!badge) {
           badge = document.createElement('span');
@@ -65,18 +75,26 @@
           badge.dataset.color = color;
         }
         if (badge.dataset.style !== durationStyle) badge.dataset.style = durationStyle;
-        const font = durationStyle === 'text' ? getComputedStyle(times[0]).font : '';
+        const timeStyle = getComputedStyle(times[0]);
+        const font = durationStyle === 'text' ? timeStyle.font : '';
         if (badge.style.font !== font) badge.style.font = font;
+        const timeLine = parseFloat(timeStyle.lineHeight) || times[0].getBoundingClientRect().height;
+        const lineHeight = durationStyle === 'box' && timeLine < 16 ? Math.max(10, timeLine - 2) + 'px' : '';
+        if (badge.style.lineHeight !== lineHeight) badge.style.lineHeight = lineHeight;
         if (badge.textContent !== format(minutes, durationStyle)) badge.textContent = format(minutes, durationStyle);
         const timeRect = times[0].getBoundingClientRect();
         const eventRect = event.getBoundingClientRect();
-        const parentRect = times[0].parentElement.getBoundingClientRect();
         const badgeStyle = getComputedStyle(badge);
         colors.font = `${badgeStyle.fontWeight} ${badgeStyle.fontSize} ${badgeStyle.fontFamily}`;
         const badgeWidth = Math.ceil(colors.measureText(badge.textContent).width) + (durationStyle === 'box' ? 8 : 0);
         const badgeHeight = (parseFloat(badgeStyle.lineHeight) || parseFloat(badgeStyle.fontSize) * 1.2) + (durationStyle === 'box' ? 2 : 0);
         const bottom = eventRect.bottom - parseFloat(getComputedStyle(event).paddingBottom || 0);
-        const available = Math.min(parentRect.right, eventRect.right - parseFloat(getComputedStyle(event).paddingRight || 0)) - timeRect.left;
+        let right = eventRect.right - parseFloat(getComputedStyle(event).paddingRight || 0);
+        for (let node = times[0].parentElement; node && node !== event; node = node.parentElement) {
+          const style = getComputedStyle(node);
+          right -= parseFloat(style.paddingRight || 0) + parseFloat(style.borderRightWidth || 0);
+        }
+        const available = right - timeRect.left;
         const range = document.createRange();
         range.selectNodeContents(times[0]);
         const textWidth = range.getBoundingClientRect().width;
@@ -88,6 +106,29 @@
           resizeObserver.observe(event);
         }
         kept.add(badge);
+      }
+    }
+    if (enabled) {
+      for (const dialog of document.querySelectorAll('[role="dialog"]')) {
+        for (const line of dialog.querySelectorAll('div, span')) {
+          if (line.closest(eventSelector) || line.querySelector('div') || line.matches(badgeSelector)) continue;
+          const text = [...line.childNodes].filter((node) => !node.matches?.(badgeSelector)).map((node) => node.textContent).join('');
+          const match = /^([^·⋅•]*(?:\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b|\b\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b)[^·⋅•]*)[·⋅•]\s*([^·⋅•]+)$/i.exec(text.trim());
+          const minutes = match && duration(match[2]);
+          if (!minutes) continue;
+          let badge = line.querySelector(':scope > [data-calendar-length]');
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.setAttribute('data-calendar-length', '');
+            badge.setAttribute('aria-hidden', 'true');
+            badge.dataset.layout = 'detail';
+            line.append(badge);
+          }
+          if (badge.dataset.style !== durationStyle) badge.dataset.style = durationStyle;
+          if (badge.textContent !== format(minutes, durationStyle)) badge.textContent = format(minutes, durationStyle);
+          kept.add(badge);
+          break;
+        }
       }
     }
     for (const badge of document.querySelectorAll(badgeSelector)) {

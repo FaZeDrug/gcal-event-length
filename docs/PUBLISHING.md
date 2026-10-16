@@ -4,10 +4,10 @@ You can use the extension locally right now. Publishing is a separate process: *
 
 ## 1. Do the last manual checks
 
-Use the 0.5.0 install ZIP on your own Chrome before submitting:
+Use the 0.6.0 install ZIP on your own Chrome before submitting:
 
 - [ ] Load/reload the extension and refresh Calendar.
-- [ ] Open the toolbar popup; confirm the 360×560 layout and keyboard focus are readable.
+- [ ] Open the toolbar popup; confirm the 300×400 layout and keyboard focus are readable.
 - [ ] Turn **Show durations** Off (labels disappear) and On (labels return).
 - [ ] Switch both styles, reopen the popup, and verify two open Calendar tabs update.
 - [ ] Check Day/Week navigation, an event time edit, clicks, dragging, and resizing in a test calendar.
@@ -25,7 +25,7 @@ Google may ask for additional publisher verification or regional disclosures. Co
 
 ## 3. Upload the correct ZIP
 
-Run `python3 scripts/package.py`, or use the supplied **`google-calendar-event-length-0.5.0-store.zip`**.
+Run `python3 scripts/package.py`, or use the supplied **`google-calendar-event-length-0.6.0-store.zip`**.
 
 Choose **Add new item → Choose file → Upload** in the dashboard. Upload the ZIP as-is. `manifest.json` must be at its root.
 
@@ -40,12 +40,12 @@ Prepare these graphics:
 | Asset | Size | Where to get it |
 | --- | --- | --- |
 | Store icon | 128×128 PNG | `extension/icons/icon128.png` |
-| Screenshot | Prefer 1280×800; at least one | Use the prepared popup artwork in `docs/store-assets/`, and add a sanitized live Calendar screenshot before submission |
+| Screenshots | 1280×800, up to five | `docs/store-assets/screenshot-1-box.png` … `screenshot-4-off.png` (live Calendar captures from October 18, 2026; see `docs/store-assets/README.md`) |
 | Small promotional tile | 440×280 PNG/JPEG | `docs/store-assets/promo-440x280.png` |
 | Optional marquee | 1400×560 | Only needed if you choose to supply it |
 | Optional promotional video | YouTube URL | The supplied MP4 can be used to create a video; no upload was performed |
 
-The prepared screenshot artwork incorporates the **real unpacked popup**, not a fake Calendar page. Review it before publishing. Google allows up to five screenshots; its image guidance also accepts 640×400, though 1280×800 is preferred. Follow any current dashboard validation if it differs.
+The screenshots are real captures of the unpacked extension on live Google Calendar, cropped to generic events. Review them before uploading.
 
 ## 5. Complete privacy and testing fields
 

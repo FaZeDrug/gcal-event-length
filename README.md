@@ -2,25 +2,31 @@
 
 **See how long an event lasts, right beside its time.**
 
-An independent Chrome extension for Google Calendar's Day and Week views. Choose an outlined duration badge or simple parentheses from a small, animated sakura popup.
+A published Chrome extension for Google Calendar's Day and Week views. **[Add it from the Chrome Web Store](https://chromewebstore.google.com/detail/noigmncmopplmmbnnddkdbkihnjlimne)**. Turn durations on or off and choose an outlined badge or simple parentheses from a small monochrome popup with an animated purple ASCII tear-away calendar.
 
-<img src="docs/images/popup.png" width="360" height="560" alt="The extension's sakura popup, with a Show durations on/off switch and Outlined box and Parentheses style choices">
+<img src="docs/images/popup.gif" width="300" height="400" alt="Animated Event Duration popup: a purple ASCII tear-away calendar above a Show durations switch and Outlined box and Parentheses style choices">
 
-*Screenshot of the real unpacked extension popup, at its actual 360 × 560 size.*
+*The real extension popup, recorded at 2× (actual size 300 × 400).*
+
+This version's design is inspired by [this post by @praveenisomer](https://x.com/praveenisomer/status/2032418900298887633). Credit to him for the ASCII idea.
 
 ## What it does
 
 - Turns `9:11–11:32pm` into **`2h 21m`** or **`(2 hr 21 min)`**—no mental math.
 - Puts durations **beside the time**, including tall events and events with locations.
+- Labels **short events** too, even when Calendar shows only a start time like `busy, 1:30pm`.
+- Shows the duration next to the time when you **click an event** and its details open.
 - Uses black or white for contrast, and hides the label when it cannot fit without covering the original time.
 - Saves your style choice locally and updates open Calendar tabs automatically.
-- Adds gentle dithered sakura motion **only inside the popup**. Reduced-motion preferences produce a static scene; closing or hiding the popup stops animation.
+- Animates a purple ASCII tear-away calendar **only inside the popup**. Reduced-motion preferences draw a single still frame; closing or hiding the popup stops animation.
 
 No backend, external API, analytics, or separate sign-in. Not affiliated with or endorsed by Google.
 
 ## Install it now
 
-This project is currently distributed as an unpacked extension; it has not been published to the Chrome Web Store.
+**From the Chrome Web Store (recommended):** open [Google Calendar Event Length on the Chrome Web Store](https://chromewebstore.google.com/detail/noigmncmopplmmbnnddkdbkihnjlimne), click **Add to Chrome**, then refresh Google Calendar and choose **Day** or **Week**. Chrome keeps it updated for you.
+
+The store currently has version 0.5.0. Version 0.6.0 in this repository (the monochrome popup, short-event labels, and durations in the event-details popup) will reach the store as an update after review. To try 0.6.0 before then, load it unpacked:
 
 1. Extract the **install ZIP**, or download this repository.
 2. In Chrome, open **`chrome://extensions`** and turn on **Developer mode**.
@@ -41,7 +47,9 @@ This project is currently distributed as an unpacked extension; it has not been 
 | English AM/PM, 24-hour times, noon/midnight | Unsupported locale formats |
 | Same-day ranges with unambiguous start/end times | Overnight, multi-day, reversed, or ambiguous ranges |
 | Exact hours and minutes | Time-zone/DST-aware elapsed-time calculations |
-| Updating labels after DOM changes and navigation | Events displaying only a start time |
+| Updating labels after DOM changes and navigation | Events too narrow for the label beside their time |
+
+**Short events.** When Google Calendar draws a short event as one line with only its start time (for example "busy, 2pm"), the extension reads the end time from the event's screen-reader text and puts the label after that start time. Click any event and the duration also appears next to its time in Calendar's event details popup. Turning **Show durations** off hides both.
 
 If a label doesn't fit, it disappears rather than resizing the event or truncating its time. Google Calendar's markup is not a public extension API and may change. If labels stop appearing, a redacted **Copy outerHTML** sample of an event block helps diagnose the selector without sharing your login.
 
@@ -53,13 +61,7 @@ The extension reads supported Calendar event time text and nearby DOM metadata *
 - **`storage`:** remembers whether durations are on and which style you chose, and updates other open Calendar tabs.
 - Fonts, illustration, scripts, and fallback artwork are packaged locally; there are no remote assets.
 
-Read the [privacy policy](PRIVACY.md). The sakura illustration is decorative and cannot intercept clicks or keyboard focus.
-
-## Publish your own copy
-
-Start with the [Chrome Web Store publishing guide](docs/PUBLISHING.md). It includes a step-by-step checklist, account requirements, package selection, privacy disclosures, reviewer instructions, and update instructions.
-
-The [ready-to-use listing copy](docs/STORE-LISTING.md) includes the description, single-purpose statement, and permission explanations. Publishing still requires **your developer account, registration payment, privacy declarations, and explicit submission**; this repository does not do those for you.
+Read the [privacy policy](PRIVACY.md). The calendar animation is decorative and cannot intercept clicks or keyboard focus.
 
 ## Develop and test
 
@@ -89,9 +91,9 @@ Outputs go to `artifacts/`:
 
 ## Verification
 
-The test suite covers time parsing, manifest scope, duplicate/stale-label cleanup, inline fit, contrast, navigation, and actual MV3 injection on controlled Calendar-origin fixtures. It loads the real popup and checks both style choices, persistence after reopening, instant changes in two supported fixture tabs, keyboard focus, loading/saving/error states, motion, reduced motion, hidden-page pausing, fallback artwork, dimensions, and absence of remote requests.
+The test suite covers time parsing, manifest scope, duplicate/stale-label cleanup, inline fit, contrast, navigation, and actual MV3 injection on controlled Calendar-origin fixtures. It loads the real popup and checks the exact 300 × 400 size with no overflow, monochrome UI colors, the on/off switch, both style choices, persistence after reopening, instant changes in two supported fixture tabs, keyboard focus, loading/saving/error states, motion, reduced motion, hidden-page pausing, device-resolution canvas, and absence of remote requests.
 
-Earlier versions were inspected on live Google Calendar for Day/Week labels, navigation, and clicking. **This release's automated Calendar checks use controlled fixtures**, not a fresh live Calendar session. Before publishing, run the manual checklist in [PUBLISHING.md](docs/PUBLISHING.md), especially real event edits and drag/resize behavior.
+Earlier versions were inspected on live Google Calendar for Day/Week labels, navigation, and clicking. **This release's automated Calendar checks use controlled fixtures**, not a fresh live Calendar session. Real event edits and drag/resize behavior should still be checked by hand on live Calendar.
 
 ## Project layout
 
@@ -100,7 +102,9 @@ extension/       Installable Manifest V3 extension
 tests/           Parser, Calendar-fixture, and real-popup tests
 docs/            Screenshots, store copy, and publishing guide
 scripts/         Demo server and ZIP packaging
-design-preview/  Historical, standalone sakura design sandbox
+design-preview/  Historical sakura design sandbox (no longer shipped)
 ```
 
-The popup uses the locally bundled Inter font; its licenses are in `extension/fonts/`. No React or shader dependency is required.
+The popup uses the locally bundled Inter font; its licenses are in `extension/fonts/`. The animation in `extension/calendar.js` is the supplied fixed-grid tear-away ASCII calendar script, adapted only to size itself to the popup canvas, pause when hidden, and draw a still frame for reduced motion.
+
+**Heading font:** the design uses **Daisler Light** (Eko Bimantara). No licensed font file is in this repository, and the free trial is personal-use only, so it is not bundled. The popup uses Daisler Light if it is installed on the computer and otherwise falls back to Georgia. To ship it, buy a license that permits embedding the font in distributed software (a desktop or webfont license alone does not cover that; confirm with the foundry), add the file to `extension/fonts/`, and point the `Daisler` `@font-face` in `popup.css` at it.

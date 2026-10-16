@@ -12,6 +12,23 @@
   .title, .gVNoLb { line-height: 16px; }
   #short { height: 54px; background: #e9bf4e; }
   #dark { background: black; color: white; }
+  #compact { height: 34px; padding: 2px 8px 0; background: #f4cbeb; }
+  #tight { height: 29px; padding: 1px 8px 0; background: #e9bf4e; }
+  #tight .title, #tight .gVNoLb { line-height: 14px; }
+  #range33 { height: 26px; padding: 1px 8px 0; background: #f4cbeb; }
+  .real { box-sizing: border-box; width: 160px; padding: 0; overflow: visible; border-radius: 4px; background: #f7cbeb; color: black; }
+  .real.oAFpMd { display: flex; height: 22px; }
+  .real.two { height: 47px; }
+  #real15narrow { width: 68px; }
+  .real .Jcb6qd { display: flex; overflow: hidden; padding-left: 8px; max-height: 100%; }
+  .real .fFwDnf { display: block; overflow: hidden; flex: 1; }
+  .real .lhydbb { font-size: 12px; line-height: 15px; overflow: hidden; }
+  .real .RIOtYe.Qt1TOc { display: flex; white-space: nowrap; padding-right: 8px; }
+  .real.two .RIOtYe { display: flex; white-space: nowrap; padding-top: 4px; }
+  .real .KcY3wb { display: flex; }
+  .real .I0UMhf, .real .pttLke, .real .EWOIrf { display: block; }
+  .real .gVNoLb { display: flex; white-space: nowrap; }
+  .XuJrye { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   #narrow { height: 54px; width: 90px; background: #e9bf4e; }
 </style>
 <h1>Black/white contrast & space-aware labels</h1>
@@ -20,7 +37,13 @@
   <section><h2>Short: beside the time</h2><div id="short" class="event" data-eventid="short" role="button"><div class="title">Busy</div><div class="gVNoLb EiZ8Dd">2 – 2:45pm</div></div></section>
   <section><h2>Tall: still beside the time</h2><div id="tall" class="event" data-eventid="tall" role="button"><div class="title">Focus</div><div class="gVNoLb EiZ8Dd">1:30 – 2:30pm</div></div></section>
   <section><h2>Black: white text and outline</h2><div id="dark" class="event" data-eventid="dark" role="button"><div class="title">Evening</div><div class="gVNoLb EiZ8Dd">9:11 – 11:32pm</div></div></section>
+  <section><h2>Compact 45 min: time on last line</h2><div id="compact" class="event" data-eventid="compact" role="button"><div class="title">All-hands meeting</div><div class="gVNoLb EiZ8Dd">3:45 – 4:30pm</div></div></section>
+  <section><h2>Tight 14px lines</h2><div id="tight" class="event" data-eventid="tight" role="button"><div class="title">Busy</div><div class="gVNoLb EiZ8Dd">3 – 3:45pm</div></div></section>
   <section><h2>Too narrow: keep time, omit badge</h2><div id="narrow" class="event" data-eventid="narrow" role="button"><div class="title">Busy</div><div class="gVNoLb EiZ8Dd">2 – 2:45pm</div></div></section>
   <section><h2>Location: also beside the time</h2><div id="location" class="event" data-eventid="location" role="button"><div class="title">Appointment</div><div class="gVNoLb EiZ8Dd">10am – 9pm</div><div class="K9QN7e EiZ8Dd">Example venue</div></div></section>
+  <section><h2>33 min: range on a clipped second line</h2><div id="range33" class="event" data-eventid="range33" role="button"><div class="title">Review</div><div class="gVNoLb EiZ8Dd">4 – 4:33pm</div></div></section>
+  <section><h2>Real 15 min chip, start time only (live Calendar markup)</h2><div id="real15" class="event real GTG3wb ChfiMc rFUW1c EiZ8Dd oAFpMd afiDFd" data-eventid="real15" role="button"><div class="XuJrye">4pm to 4:15pm, 15 mins, Example calendar, No location, October 19, 2026</div><div aria-hidden="true" class="Jcb6qd AL18ce"><div class="fFwDnf"><div class="lhydbb RIOtYe cpCWFd PKhkGc EiZ8Dd qqMC3e Gt6oUd Qt1TOc" style="max-height: 15px;"><span class="KcY3wb"><span class="I0UMhf">15 mins</span><span class="pttLke">,&nbsp;</span><span class="EWOIrf">4pm</span></span></div></div></div></div></section>
+  <section><h2>Real 15 min chip in a narrow column</h2><div id="real15narrow" class="event real GTG3wb ChfiMc rFUW1c EiZ8Dd oAFpMd afiDFd" data-eventid="real15narrow" role="button"><div class="XuJrye">4pm to 4:15pm, 15 mins, Example calendar, No location, October 19, 2026</div><div aria-hidden="true" class="Jcb6qd AL18ce"><div class="fFwDnf"><div class="lhydbb RIOtYe cpCWFd PKhkGc EiZ8Dd qqMC3e Gt6oUd Qt1TOc" style="max-height: 15px;"><span class="KcY3wb"><span class="I0UMhf">15 mins</span><span class="pttLke">,&nbsp;</span><span class="EWOIrf">4pm</span></span></div></div></div></div></section>
+  <section><h2>Real 31 min chip, two lines (live Calendar markup)</h2><div id="real31" class="event real two GTG3wb ChfiMc rFUW1c EiZ8Dd afiDFd" data-eventid="real31" role="button"><div class="XuJrye">5pm to 5:31pm, 31 minutes, Example calendar, No location, October 19, 2026</div><div aria-hidden="true" class="Jcb6qd"><div class="fFwDnf"><div class="lhydbb RIOtYe cpCWFd EiZ8Dd qqMC3e Gt6oUd" style="max-height: 15px;"><span class="KcY3wb"><span class="I0UMhf">31 minutes</span></span></div><div class="lhydbb gVNoLb EiZ8Dd qqMC3e Gt6oUd">5 – 5:31pm</div></div></div></div></section>
 </main>
 </html>

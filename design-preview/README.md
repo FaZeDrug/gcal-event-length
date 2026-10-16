@@ -1,3 +1,5 @@
+> **Superseded.** The shipped popup (0.6.0+) follows the monochrome Figma design with the tear-away calendar animation. This folder is kept only as history.
+
 # Sakura popup study — revision 2, unapproved
 
 This folder preserves the original isolated design/motion prototype. **Since version 0.4.0, the extension integrates the approved design in `extension/`.** The native radio inputs in this sandbox still only simulate saving; they do not write `durationStyle` or communicate with Calendar tabs. Use the installed extension to exercise real settings and see the root README for current verification.

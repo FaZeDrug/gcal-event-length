@@ -1,6 +1,6 @@
 # Chrome Web Store listing copy
 
-Review this before submitting; it describes version 0.5.0, not planned features.
+Review this before submitting; it describes version 0.6.0, not planned features.
 
 ## Name
 
@@ -24,16 +24,17 @@ Choose the style you prefer:
 • Outlined badges, such as “1h 30m”
 • Simple parentheses, such as “(1 hr 30 min)”
 
-Open the extension's sakura-themed popup to turn durations on or off and switch styles. Your preferences save automatically and updates open Calendar tabs. The popup includes gently animated, dithered cherry blossoms and respects your system's reduced-motion preference.
+Open the extension's popup to turn durations on or off and switch styles. Your preferences save automatically and update open Calendar tabs. The popup shows a small animated ASCII tear-away calendar and respects your system's reduced-motion preference.
 
 Designed to stay out of your way:
 • Duration text uses black or white for contrast.
 • Labels stay beside the original time and are omitted when they cannot fit.
+• Short events that show only a start time still get a label, and clicking any event shows its duration in the details popup.
 • Labels do not intercept event clicks or add keyboard tab stops.
 • Calendar data is processed locally; event content is not stored or sent anywhere.
 • No separate account, backend, analytics, or external API is required.
 
-Current limits: supports unambiguous same-day time ranges in English AM/PM and 24-hour formats. All-day events, overnight/multi-day ranges, ambiguous times, unsupported locales, and events showing only a start time are skipped. Google Calendar interface changes may require extension updates.
+Current limits: supports unambiguous same-day time ranges in English AM/PM and 24-hour formats. Events too narrow for the label keep their time and skip the label; click the event to see its duration in the details popup. All-day events, overnight/multi-day ranges, ambiguous times, and unsupported locales are also skipped. Google Calendar interface changes may require extension updates.
 
 This is an independent extension and is not affiliated with or endorsed by Google.
 

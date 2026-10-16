@@ -4,15 +4,20 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const os = require('node:os');
 
+const extension = path.resolve('extension');
+const launch = (profile, options = {}) => chromium.launchPersistentContext(profile, {
+  channel: 'chromium', headless: true, viewport: { width: 300, height: 400 },
+  ignoreDefaultArgs: ['--disable-extensions'],
+  args: [`--disable-extensions-except=${extension}`, `--load-extension=${extension}`],
+  ...options
+});
+const status = (page, text) => page.waitForFunction((text) => document.querySelector('#status').textContent === text, text);
+const frame = (page) => page.locator('canvas').evaluate((node) => node.toDataURL());
+
 (async () => {
-  const profile = await fs.mkdtemp(path.join(os.tmpdir(), 'sakura-popup-'));
+  const profile = await fs.mkdtemp(path.join(os.tmpdir(), 'calendar-popup-'));
   await fs.mkdir('artifacts/popup-video', { recursive: true });
-  const context = await chromium.launchPersistentContext(profile, {
-    channel: 'chromium', headless: true, viewport: { width: 360, height: 560 },
-    ignoreDefaultArgs: ['--disable-extensions'],
-    args: [`--disable-extensions-except=${path.resolve('extension')}`, `--load-extension=${path.resolve('extension')}`],
-    recordVideo: { dir: 'artifacts/popup-video', size: { width: 360, height: 560 } }
-  });
+  const context = await launch(profile, { recordVideo: { dir: 'artifacts/popup-video', size: { width: 300, height: 400 } } });
   try {
     const manager = await context.newPage();
     await manager.goto('chrome://extensions');
@@ -23,110 +28,117 @@ const os = require('node:os');
     const remote = [], errors = [];
     page.on('request', (request) => { if (/^https?:/.test(request.url())) remote.push(request.url()); });
     page.on('pageerror', (error) => errors.push(error.message));
+    page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
     await page.goto(url);
     await page.waitForFunction(() => !document.querySelector('fieldset').disabled);
     await page.evaluate(() => document.fonts.ready);
-    assert.equal(await page.locator('h1').innerText(), 'Google Calendar\nEvent Length');
-    assert.equal(await page.locator('body').evaluate((node) => node.scrollWidth), 360);
-    assert.equal(await page.locator('body').evaluate((node) => node.scrollHeight), 560);
-    for (const selector of ['h1', '.switch', 'fieldset', '#status', 'footer']) {
-      assert.equal(await page.locator(selector).evaluate((node) => {
-        const r = node.getBoundingClientRect();
-        return r.x >= 0 && r.right <= 360 && r.y >= 0 && r.bottom <= 560;
-      }), true);
+    assert.equal(await page.locator('h1').innerText(), 'Event Duration');
+    assert.deepEqual(await page.evaluate(() => [innerWidth, innerHeight]), [300, 400]);
+    for (const node of ['documentElement', 'body']) {
+      assert.deepEqual(await page.evaluate((node) => [document[node].scrollWidth, document[node].scrollHeight], node), [300, 400]);
     }
-    const first = await page.locator('canvas').evaluate((node) => node.toDataURL());
-    await page.waitForTimeout(8000);
-    assert.notEqual(await page.locator('canvas').evaluate((node) => node.toDataURL()), first);
-    await page.locator('.popup').screenshot({ path: 'artifacts/sakura-popup.png' });
+    assert.equal(await page.evaluate(() => [...document.querySelectorAll('.popup *')].every((el) => {
+      const r = el.getBoundingClientRect();
+      return r.x >= 0 && r.right <= 300 && r.y >= 0 && r.bottom <= 400 && el.scrollWidth <= el.clientWidth + 1;
+    })), true, 'Every popup element fits inside 300×400 without clipping');
+    assert.equal(await page.evaluate(() => {
+      const ink = (el) => getComputedStyle(el).color.match(/\d+/g).slice(0, 3).map(Number);
+      return [...document.querySelectorAll('.popup *:not(canvas)')].every((el) => new Set(ink(el)).size === 1);
+    }), true, 'UI text uses only black, grey, or white');
+    assert.equal(await page.locator('#enabled').isChecked(), true);
+    assert.equal(await page.locator('input[value="box"]').isChecked(), true);
+    await status(page, '✓ Saved automatically');
+
+    const first = await frame(page);
+    await page.waitForTimeout(1500);
+    assert.notEqual(await frame(page), first, 'Calendar animates');
+    assert.deepEqual(await page.locator('canvas').evaluate((node) => [node.width, node.height]), [300, 200]);
+    await page.screenshot({ path: 'artifacts/popup-box.png' });
+
     await page.keyboard.press('Tab');
     assert.equal(await page.locator('#enabled').evaluate((node) => node === document.activeElement), true);
     assert.equal(await page.locator('#enabled').getAttribute('role'), 'switch');
+    assert.equal(await page.locator('#enabled').evaluate((node) => getComputedStyle(node).outlineStyle), 'solid');
     await page.keyboard.press('Space');
-    await page.waitForFunction(() => document.querySelector('#status').textContent === 'Durations off.');
-    assert.equal(await page.locator('#state').innerText(), 'Off');
-    await page.locator('.popup').screenshot({ path: 'artifacts/sakura-off.png' });
+    await status(page, 'Off · preference saved');
+    assert.equal(await page.evaluate(() => document.body.classList.contains('off')), true);
+    await page.screenshot({ path: 'artifacts/popup-off.png' });
     await page.keyboard.press('Space');
-    await page.waitForFunction(() => document.querySelector('#status').textContent === 'Durations on.');
+    await status(page, '✓ Saved automatically');
     await page.keyboard.press('Tab');
     assert.equal(await page.locator('input[value="box"]').evaluate((node) => node === document.activeElement), true);
     assert.equal(await page.locator('input[value="box"]').evaluate((node) => getComputedStyle(node).outlineStyle), 'solid');
-    await page.locator('.popup').screenshot({ path: 'artifacts/sakura-focus.png' });
+    await page.screenshot({ path: 'artifacts/popup-focus.png' });
     await page.keyboard.press('ArrowDown');
-    await page.waitForFunction(() => document.querySelector('#status').textContent === 'Saved.');
-    assert.equal(await page.locator('input[value="text"]').isChecked(), true);
+    await page.waitForFunction(() => document.querySelector('input[value="text"]').checked && !document.querySelector('fieldset').disabled);
+    await page.screenshot({ path: 'artifacts/popup-text.png' });
+
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-    const staticFrame = await page.locator('canvas').evaluate((node) => node.toDataURL());
-    await page.waitForTimeout(300);
-    assert.equal(await page.locator('canvas').evaluate((node) => node.toDataURL()) === staticFrame, true, 'Reduced-motion canvas remains static');
-    await page.locator('.popup').screenshot({ path: 'artifacts/sakura-reduced.png' });
+    const still = await frame(page);
+    await page.waitForTimeout(400);
+    assert.equal(await frame(page) === still, true, 'Reduced motion draws one still frame');
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.evaluate(() => {
       Object.defineProperty(document, 'hidden', { configurable: true, value: true });
       document.dispatchEvent(new Event('visibilitychange'));
     });
-    const hiddenFrame = await page.locator('canvas').evaluate((node) => node.toDataURL());
-    await page.waitForTimeout(300);
-    assert.equal(await page.locator('canvas').evaluate((node) => node.toDataURL()) === hiddenFrame, true, 'Hidden popup stops animating');
+    const hidden = await frame(page);
+    await page.waitForTimeout(400);
+    assert.equal(await frame(page) === hidden, true, 'Hidden popup stops animating');
     assert.deepEqual(remote, []);
     assert.deepEqual(errors, []);
     const video = page.video();
     await page.close();
-    await video.saveAs('artifacts/popup-video/sakura-popup.webm');
+    await video.saveAs('artifacts/popup-video/calendar-popup.webm');
 
-    for (const state of ['loading', 'load-error', 'saving', 'save-error', 'fallback']) {
+    const reopened = await context.newPage();
+    await reopened.goto(url);
+    await reopened.waitForFunction(() => !document.querySelector('fieldset').disabled);
+    assert.equal(await reopened.locator('input[value="text"]').isChecked(), true, 'Style persists after reopening');
+    assert.equal(await reopened.locator('#enabled').isChecked(), true);
+    await reopened.close();
+
+    for (const state of ['loading', 'load-error', 'saving', 'save-error']) {
       const p = await context.newPage();
       await p.addInitScript((state) => {
         if (state === 'loading') chrome.storage.local.get = () => new Promise(() => {});
         if (state === 'load-error') chrome.storage.local.get = () => Promise.reject(new Error('Controlled failure'));
         if (state === 'saving') chrome.storage.local.set = () => new Promise(() => {});
         if (state === 'save-error') chrome.storage.local.set = () => Promise.reject(new Error('Controlled failure'));
-        if (state === 'fallback') HTMLCanvasElement.prototype.getContext = () => null;
       }, state);
       await p.goto(url);
       if (state === 'saving' || state === 'save-error') {
         await p.waitForFunction(() => !document.querySelector('fieldset').disabled);
         await p.click('input[value="box"]');
       }
-      if (state === 'fallback') {
-        await p.waitForFunction(() => document.querySelector('.poster').naturalWidth > 0);
-        assert.equal(await p.locator('.poster').isVisible(), true);
-      } else {
-        const expected = { loading: 'Loading preference…', 'load-error': 'Could not load. Reopen to retry.', saving: 'Saving…', 'save-error': 'Could not save. Select a style to retry.' }[state];
-        await p.waitForFunction((text) => document.querySelector('#status').textContent === text, expected);
-        assert.equal(await p.locator('input[type=radio]').first().isDisabled(), state !== 'save-error');
-        assert.equal(await p.locator('#status').evaluate((node) => node.getBoundingClientRect().bottom < document.querySelector('footer').getBoundingClientRect().top), true);
-      }
+      const expected = { loading: 'Loading…', 'load-error': 'Could not load. Reopen to retry.', saving: 'Saving…', 'save-error': 'Could not save. Select a style to retry.' }[state];
+      await status(p, expected);
+      assert.equal(await p.locator('input[type=radio]').first().isDisabled(), state !== 'save-error');
       if (state === 'save-error') {
         await p.click('#enabled');
-        await p.waitForFunction(() => document.querySelector('#status').textContent === 'Could not save. Try the switch again.');
+        await status(p, 'Could not save. Try the switch again.');
         assert.equal(await p.locator('#enabled').isChecked(), true);
-        assert.equal(await p.locator('#state').innerText(), 'On');
       }
-      await p.screenshot({ path: `artifacts/sakura-${state}.png` });
       await p.close();
     }
-    const retinaProfile = await fs.mkdtemp(path.join(os.tmpdir(), 'sakura-retina-'));
-    const retina = await chromium.launchPersistentContext(retinaProfile, {
-      channel: 'chromium', headless: true, viewport: { width: 360, height: 560 }, deviceScaleFactor: 2, reducedMotion: 'reduce',
-      ignoreDefaultArgs: ['--disable-extensions'],
-      args: [`--disable-extensions-except=${path.resolve('extension')}`, `--load-extension=${path.resolve('extension')}`]
-    });
+
+    const retinaProfile = await fs.mkdtemp(path.join(os.tmpdir(), 'calendar-retina-'));
+    const retina = await launch(retinaProfile, { deviceScaleFactor: 2, reducedMotion: 'reduce' });
     try {
       const p = await retina.newPage();
       await p.goto(url);
       await p.waitForFunction(() => !document.querySelector('fieldset').disabled);
       await p.evaluate(() => document.fonts.ready);
-      const png = await p.screenshot({ path: 'artifacts/sakura-popup-2x.png' });
-      assert.equal(png.readUInt32BE(16), 720);
-      assert.equal(png.readUInt32BE(20), 1120);
-      assert.equal(await p.locator('canvas').evaluate((node) => node.getBoundingClientRect().width), 300);
+      const png = await p.screenshot({ path: 'artifacts/popup-2x.png' });
+      assert.equal(png.readUInt32BE(16), 600);
+      assert.equal(png.readUInt32BE(20), 800);
+      assert.deepEqual(await p.locator('canvas').evaluate((node) => [node.width, node.height]), [600, 400], 'Canvas renders at device resolution');
     } finally {
       await retina.close();
       await fs.rm(retinaProfile, { recursive: true, force: true });
     }
-    console.log('PASS: real unpacked popup, motion, 360×560 fit at 1×/2×, keyboard controls/focus, on/off switch, reduced motion, hidden pause, local poster fallback, controlled loading/save errors, and no remote requests.');
+    console.log('PASS: real unpacked popup at exactly 300×400 (1×/2×), no overflow, monochrome UI, animated calendar, keyboard switch/radios with focus, persistence on reopen, reduced motion, hidden pause, controlled loading/save errors, and no remote requests.');
   } finally {
     await context.close();
     await fs.rm(profile, { recursive: true, force: true });
