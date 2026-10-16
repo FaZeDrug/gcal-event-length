@@ -40,7 +40,7 @@ Prepare these graphics:
 | Asset | Size | Where to get it |
 | --- | --- | --- |
 | Store icon | 128×128 PNG | `extension/icons/icon128.png` |
-| Screenshots | 1280×800, up to five | `docs/store-assets/screenshot-1-box.png` … `screenshot-4-popup.png` (live Calendar captures; see `docs/store-assets/README.md`) |
+| Screenshots | 1280×800, up to five | `docs/store-assets/screenshot-1-box.png` … `screenshot-4-off.png` (live Calendar captures from October 18, 2026; see `docs/store-assets/README.md`) |
 | Small promotional tile | 440×280 PNG/JPEG | `docs/store-assets/promo-440x280.png` |
 | Optional marquee | 1400×560 | Only needed if you choose to supply it |
 | Optional promotional video | YouTube URL | The supplied MP4 can be used to create a video; no upload was performed |

@@ -2,7 +2,7 @@
 
 **See how long an event lasts, right beside its time.**
 
-An independent Chrome extension for Google Calendar's Day and Week views. Turn durations on or off and choose an outlined badge or simple parentheses from a small monochrome popup with an animated purple ASCII tear-away calendar.
+A published Chrome extension for Google Calendar's Day and Week views. **[Add it from the Chrome Web Store](https://chromewebstore.google.com/detail/noigmncmopplmmbnnddkdbkihnjlimne)**. Turn durations on or off and choose an outlined badge or simple parentheses from a small monochrome popup with an animated purple ASCII tear-away calendar.
 
 <img src="docs/images/popup.png" width="300" height="400" alt="The Event Duration popup: a purple ASCII tear-away calendar above a Show durations switch and Outlined box and Parentheses style choices">
 
@@ -14,6 +14,8 @@ This version's design is inspired by [this post by @praveenisomer](https://x.com
 
 - Turns `9:11–11:32pm` into **`2h 21m`** or **`(2 hr 21 min)`**—no mental math.
 - Puts durations **beside the time**, including tall events and events with locations.
+- Labels **short events** too, even when Calendar shows only a start time like `busy, 1:30pm`.
+- Shows the duration next to the time when you **click an event** and its details open.
 - Uses black or white for contrast, and hides the label when it cannot fit without covering the original time.
 - Saves your style choice locally and updates open Calendar tabs automatically.
 - Animates a purple ASCII tear-away calendar **only inside the popup**. Reduced-motion preferences draw a single still frame; closing or hiding the popup stops animation.
@@ -22,7 +24,9 @@ No backend, external API, analytics, or separate sign-in. Not affiliated with or
 
 ## Install it now
 
-This project is currently distributed as an unpacked extension; it has not been published to the Chrome Web Store.
+**From the Chrome Web Store (recommended):** open [Google Calendar Event Length on the Chrome Web Store](https://chromewebstore.google.com/detail/noigmncmopplmmbnnddkdbkihnjlimne), click **Add to Chrome**, then refresh Google Calendar and choose **Day** or **Week**. Chrome keeps it updated for you.
+
+The store currently has version 0.5.0. Version 0.6.0 in this repository (the monochrome popup, short-event labels, and durations in the event-details popup) will reach the store as an update after review. To try 0.6.0 before then, load it unpacked:
 
 1. Extract the **install ZIP**, or download this repository.
 2. In Chrome, open **`chrome://extensions`** and turn on **Developer mode**.
