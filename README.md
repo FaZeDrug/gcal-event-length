@@ -4,9 +4,9 @@
 
 A published Chrome extension for Google Calendar's Day and Week views. **[Add it from the Chrome Web Store](https://chromewebstore.google.com/detail/noigmncmopplmmbnnddkdbkihnjlimne)**. Turn durations on or off and choose an outlined badge or simple parentheses from a small monochrome popup with an animated purple ASCII tear-away calendar.
 
-<img src="docs/images/popup.png" width="300" height="400" alt="The Event Duration popup: a purple ASCII tear-away calendar above a Show durations switch and Outlined box and Parentheses style choices">
+<img src="docs/images/popup.gif" width="300" height="400" alt="Animated Event Duration popup: a purple ASCII tear-away calendar above a Show durations switch and Outlined box and Parentheses style choices">
 
-*The real unpacked extension popup, captured at 2× (actual size 300 × 400).*
+*The real extension popup, recorded at 2× (actual size 300 × 400).*
 
 This version's design is inspired by [this post by @praveenisomer](https://x.com/praveenisomer/status/2032418900298887633). Credit to him for the ASCII idea.
 
