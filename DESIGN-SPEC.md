@@ -49,7 +49,7 @@ Information order, implemented with native HTML controls (measured from Figma at
 Content:
 
 1. Heading: **Event Duration**.
-2. Short description: **Show event lengths in Google Calendar.**
+2. Short description: **Show event lengths in Google Calendar**
 3. A **Show durations** switch (`checkbox` with `role="switch"`). On is the default. Off removes every label from open Calendar tabs and dims the style choices, which stay selectable so the next On uses them.
 4. Fieldset named **Duration style**, with two mutually exclusive radio choices:
    - **Outlined box**, with a boxed `1h` sample.

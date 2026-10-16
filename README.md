@@ -43,7 +43,9 @@ This project is currently distributed as an unpacked extension; it has not been 
 | English AM/PM, 24-hour times, noon/midnight | Unsupported locale formats |
 | Same-day ranges with unambiguous start/end times | Overnight, multi-day, reversed, or ambiguous ranges |
 | Exact hours and minutes | Time-zone/DST-aware elapsed-time calculations |
-| Updating labels after DOM changes and navigation | Events displaying only a start time |
+| Updating labels after DOM changes and navigation | Short events (about 30 minutes or less) that Calendar shows with only a start time |
+
+**Short events don't get a duration.** Google Calendar draws events of about 30 minutes or less as a single line with only the start time (for example "busy, 2pm"), so there is no end time to measure. Longer events show their full range and get a label.
 
 If a label doesn't fit, it disappears rather than resizing the event or truncating its time. Google Calendar's markup is not a public extension API and may change. If labels stop appearing, a redacted **Copy outerHTML** sample of an event block helps diagnose the selector without sharing your login.
 

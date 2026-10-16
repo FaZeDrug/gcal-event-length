@@ -33,7 +33,7 @@ Designed to stay out of your way:
 • Calendar data is processed locally; event content is not stored or sent anywhere.
 • No separate account, backend, analytics, or external API is required.
 
-Current limits: supports unambiguous same-day time ranges in English AM/PM and 24-hour formats. All-day events, overnight/multi-day ranges, ambiguous times, unsupported locales, and events showing only a start time are skipped. Google Calendar interface changes may require extension updates.
+Current limits: supports unambiguous same-day time ranges in English AM/PM and 24-hour formats. Events of about 30 minutes or less are skipped, because Google Calendar shows only their start time. All-day events, overnight/multi-day ranges, ambiguous times, and unsupported locales are also skipped. Google Calendar interface changes may require extension updates.
 
 This is an independent extension and is not affiliated with or endorsed by Google.
 
