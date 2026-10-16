@@ -106,7 +106,7 @@ const server = require('../scripts/demo.cjs');
     assert.equal(await isolated.locator('#compact [data-calendar-length]').getAttribute('data-layout'), 'inline', 'Compact event whose time sits on its last line still gets a label');
     assert.equal(await isolated.locator('#tight [data-calendar-length]').getAttribute('data-layout'), 'inline', 'Label shrinks to a 14px time line');
     assert.equal(await isolated.locator('#tight [data-calendar-length]').evaluate((node) => node.getBoundingClientRect().bottom <= node.closest('.event').getBoundingClientRect().bottom + 1), true);
-    for (const [id, text] of [['single30', '30m'], ['single15', '15m'], ['range33', '33m']]) {
+    for (const [id, text] of [['single30', '30m'], ['single15', '15m'], ['range33', '33m'], ['span30', '30m']]) {
       assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).textContent(), text, `${id} reads its duration`);
       assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).getAttribute('data-layout'), 'inline', `${id} shows its label`);
       assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).evaluate((node) => node.getBoundingClientRect().top >= node.previousElementSibling.getBoundingClientRect().top - 1 && node.getBoundingClientRect().bottom <= node.previousElementSibling.getBoundingClientRect().bottom + 1), true, `${id} label stays on the time line`);

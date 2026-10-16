@@ -44,9 +44,15 @@
       for (const event of document.querySelectorAll(eventSelector)) {
         if (!event.closest('[role="main"]') || event.closest('[role="dialog"]')) continue;
         if (/^\s*all[ -]day\b/i.test(event.getAttribute('aria-label') || '')) continue;
-        const times = [...event.querySelectorAll(timeSelector)].filter((node) =>
+        let times = [...event.querySelectorAll(timeSelector)].filter((node) =>
           node.closest(eventSelector) === event && !node.querySelector(timeSelector)
         );
+        if (!times.length) {
+          times = [...event.querySelectorAll('[aria-hidden="true"] *')].filter((node) =>
+            node.closest(eventSelector) === event && !node.children.length && !node.matches(badgeSelector)
+              && /(?:^|,\s*)(?:noon|midnight|\d{1,2}(?::\d{2})?\s*(?:[ap]\.?m\.?)?)$/i.test(node.textContent.trim())
+          ).slice(-1);
+        }
         if (times.length !== 1) continue;
         const host = event.closest('[data-eventid]');
         const minutes = duration(times[0].textContent) || [host, event, ...host.querySelectorAll('*')]
