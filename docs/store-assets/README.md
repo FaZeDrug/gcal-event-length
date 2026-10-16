@@ -13,7 +13,7 @@ Upload-ready files (Chrome Web Store sizes: screenshots 1280×800, small promo t
 
 ## Editable sources
 
-`source/` holds the cropped captures every image is built from. They come from one live Google Calendar session (Week view, Sunday, October 18, 2026) with the unpacked 0.6.0 extension: `calendar-*.png` is one day's 1–8 PM column in each state (no date header), `popup-*.png` is the real extension popup in the same states, captured at 2× on a settled animation frame, `details-*.png` is the time line of one event's details popup, and `event-chip.png` is one event from the same session. The sidebar, other days, account details, and browser chrome were cropped out before saving. Raw full-window captures are not in the repository.
+`source/` holds the cropped captures every image is built from. They come from one live Google Calendar session (Week view, Sunday, October 18, 2026) with the unpacked 0.6.0 extension: `calendar-*.png` is one day's 1–8 PM column in each state (no date header), `popup-*.png` is the real extension popup in the same states, captured at 2× on a settled animation frame, `details-*.png` is the time line of one event's details popup, and `event-chip.png` is one event from the same session. `calendar-hero.png` is a screenshot of the same events from the maintainer's own Chrome, used on the first image for its thinner outlined boxes. The sidebar, other days, account details, and browser chrome were cropped out before saving. Raw full-window captures are not in the repository.
 
 `fonts/Newsreader.ttf` (SIL Open Font License, see `fonts/OFL.txt`) is the headline font for these images only; it is not part of the extension.
 
