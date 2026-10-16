@@ -26,7 +26,7 @@ def canvas(title, caption):
 
 
 screens = [
-    ("box", "Durations beside every event time", "Outlined box style, shown on real Google Calendar events."),
+    ("box", "See event durations at a glance", "Outlined box style, shown on real Google Calendar events."),
     ("text", "Prefer plain text? Use parentheses", "Switch styles in the popup. Open Calendar tabs update instantly."),
     ("off", "Turn durations off anytime", "One switch hides every label. Your style choice is kept."),
 ]
