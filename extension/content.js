@@ -84,13 +84,17 @@
         if (badge.textContent !== format(minutes, durationStyle)) badge.textContent = format(minutes, durationStyle);
         const timeRect = times[0].getBoundingClientRect();
         const eventRect = event.getBoundingClientRect();
-        const parentRect = times[0].parentElement.getBoundingClientRect();
         const badgeStyle = getComputedStyle(badge);
         colors.font = `${badgeStyle.fontWeight} ${badgeStyle.fontSize} ${badgeStyle.fontFamily}`;
         const badgeWidth = Math.ceil(colors.measureText(badge.textContent).width) + (durationStyle === 'box' ? 8 : 0);
         const badgeHeight = (parseFloat(badgeStyle.lineHeight) || parseFloat(badgeStyle.fontSize) * 1.2) + (durationStyle === 'box' ? 2 : 0);
         const bottom = eventRect.bottom - parseFloat(getComputedStyle(event).paddingBottom || 0);
-        const available = Math.min(parentRect.right, eventRect.right - parseFloat(getComputedStyle(event).paddingRight || 0)) - timeRect.left;
+        let right = eventRect.right - parseFloat(getComputedStyle(event).paddingRight || 0);
+        for (let node = times[0].parentElement; node && node !== event; node = node.parentElement) {
+          const style = getComputedStyle(node);
+          right -= parseFloat(style.paddingRight || 0) + parseFloat(style.borderRightWidth || 0);
+        }
+        const available = right - timeRect.left;
         const range = document.createRange();
         range.selectNodeContents(times[0]);
         const textWidth = range.getBoundingClientRect().width;
