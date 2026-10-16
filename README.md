@@ -6,7 +6,9 @@ An independent Chrome extension for Google Calendar's Day and Week views. Turn d
 
 <img src="docs/images/popup.png" width="300" height="400" alt="The Event Duration popup: a purple ASCII tear-away calendar above a Show durations switch and Outlined box and Parentheses style choices">
 
-*Screenshot of the real unpacked extension popup, at its actual 300 × 400 size.*
+*The real unpacked extension popup, captured at 2× (actual size 300 × 400).*
+
+This version's design is inspired by [this post by @praveenisomer](https://x.com/praveenisomer/status/2032418900298887633). Credit to him for the ASCII idea.
 
 ## What it does
 
@@ -55,12 +57,6 @@ The extension reads supported Calendar event time text and nearby DOM metadata *
 
 Read the [privacy policy](PRIVACY.md). The calendar animation is decorative and cannot intercept clicks or keyboard focus.
 
-## Publish your own copy
-
-Start with the [Chrome Web Store publishing guide](docs/PUBLISHING.md). It includes a step-by-step checklist, account requirements, package selection, privacy disclosures, reviewer instructions, and update instructions.
-
-The [ready-to-use listing copy](docs/STORE-LISTING.md) includes the description, single-purpose statement, and permission explanations. Publishing still requires **your developer account, registration payment, privacy declarations, and explicit submission**; this repository does not do those for you.
-
 ## Develop and test
 
 The extension needs no build step. For tests, use Node 22+:
@@ -91,7 +87,7 @@ Outputs go to `artifacts/`:
 
 The test suite covers time parsing, manifest scope, duplicate/stale-label cleanup, inline fit, contrast, navigation, and actual MV3 injection on controlled Calendar-origin fixtures. It loads the real popup and checks the exact 300 × 400 size with no overflow, monochrome UI colors, the on/off switch, both style choices, persistence after reopening, instant changes in two supported fixture tabs, keyboard focus, loading/saving/error states, motion, reduced motion, hidden-page pausing, device-resolution canvas, and absence of remote requests.
 
-Earlier versions were inspected on live Google Calendar for Day/Week labels, navigation, and clicking. **This release's automated Calendar checks use controlled fixtures**, not a fresh live Calendar session. Before publishing, run the manual checklist in [PUBLISHING.md](docs/PUBLISHING.md), especially real event edits and drag/resize behavior.
+Earlier versions were inspected on live Google Calendar for Day/Week labels, navigation, and clicking. **This release's automated Calendar checks use controlled fixtures**, not a fresh live Calendar session. Real event edits and drag/resize behavior should still be checked by hand on live Calendar.
 
 ## Project layout
 

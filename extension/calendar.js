@@ -1,9 +1,9 @@
 const cv=document.getElementById('calendar'),ctx=cv.getContext('2d');
 const off=document.createElement('canvas'),oc=off.getContext('2d'),sm=document.createElement('canvas'),sx_=sm.getContext('2d',{willReadFrequently:true});
-const CW=5.6,CH=9;let S=1,GC=1,GRW=1,cpx=1,cph=1;
+const CW=5.6,CH=9;let S=1,GC=1,GRW=1,cpx=1,cph=1,HW=1,HH=1,lum,zb;
 function resize(){const d=Math.min(2,devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;cv.width=w*d;cv.height=h*d;
  S=w/760*d;cpx=CW*S;cph=CH*S;GC=Math.ceil(cv.width/cpx);GRW=Math.ceil(cv.height/cph);
- off.width=GC*2;off.height=GRW*2;sm.width=GC;sm.height=GRW}
+ HW=GC*2;HH=GRW*2;lum=new Float32Array(HW*HH);zb=new Float32Array(HW*HH)}
 addEventListener('resize',resize);resize();
 
 /* glyph atlas: 0/1 x 6 tonal levels, lavender -> #5B3FD3 */
@@ -68,7 +68,7 @@ function layer(o){
  let cy=0,cz=0;const ys=[],zs=[],ths=[];
  for(let r=0;r<rows;r++){const v=(r+.5)/rows,th=phi*(.12+.88*Math.pow(v,1.25)),c=Math.cos(th),s=Math.sin(th);
   ys[r]=cy+c*ch/2;zs[r]=cz+s*ch/2;ths[r]=th;cy+=c*ch;cz+=s*ch}
- oc.globalAlpha=(o.alpha??1)*Math.pow(fade,.8);
+ const al=(o.alpha??1)*Math.pow(fade,.8);
  for(let r=0;r<rows;r++){
   const v=(r+.5)/rows,th=ths[r],ct=Math.cos(th),back=th>1.5708,yc=.35+.65*Math.abs(ct);
   for(let c=0;c<cols;c++){
@@ -77,8 +77,8 @@ function layer(o){
    const hh=(h>>>0)/4294967296;
    if(hh>fade*2||(r<r0&&hh>rev))continue;
    const d0=tex[r*cols+c],u=(c+.5)/cols;
-   let d=back?.08+.3*d0:d0*(.6+.4*Math.cos(th-.5))*(1+.28*Math.cos(T6+u*3.1+v*2.3+seed*.7));
-   if(o.tone)d*=.75;
+   const kb=cl((th-1.2)/.75);let d=(d0*(.6+.4*Math.cos(th-.5))*(1+.28*Math.cos(T6+u*3.1+v*2.3+seed*.7)))*(1-kb)+(.08+.3*d0)*kb;
+   d*=1-(o.dim||0);
    if(d<.012)continue;
    const x=(u-.5)*W*lat+Math.sin(T6+v*3.5+seed)*2.5*v;
    const z=zs[r]+Math.sin(T6+u*3.1+v*2.3+seed*.7)*4.5*(.5+.5*v)+pn*40*Math.pow(2*u-1,2)*v;
@@ -90,9 +90,10 @@ function layer(o){
    const hx=(X*S+cv.width/2)/cpx*2,hy=(Y*S+cv.height/2)/cph*2,
     pw=Math.max(1.8,cw*sc*Math.max(.45,Math.abs(cry))*S/cpx*2*1.4),
     ph=Math.max(1.8,ch*sc*yc*S/cph*2*1.4);
-   oc.fillStyle=GRAY[Math.min(32,(d*32)|0)];
-   oc.fillRect(hx-pw/2,hy-ph/2,pw,ph)}}
- oc.globalAlpha=1}
+   
+   const xa=Math.max(0,Math.floor(hx-pw/2)),xb=Math.min(HW-1,Math.ceil(hx+pw/2)),ya=Math.max(0,Math.floor(hy-ph/2)),yb=Math.min(HH-1,Math.ceil(hy+ph/2));
+   for(let yy=ya;yy<=yb;yy++)for(let xx=xa;xx<=xb;xx++){const i=yy*HW+xx;if(z4>=zb[i]){lum[i]=lum[i]*(1-al)+d*al;if(al>.5)zb[i]=z4}}}}
+ }
 
 const E=x=>x*x*(3-2*x),cl=x=>Math.max(0,Math.min(1,x)),PERIOD=3,LIFE=5.2;
 function pageState(s){
@@ -103,11 +104,11 @@ const base=j=>({tex:pageTex(j),cols:PC,rows:PR,W:PW,H:PH,y0:PY,seed:((j%31)+31)%
 function frame(now){
  const t=now/1000+.9,tt=t/PERIOD,n=Math.floor(tt);pose(t);
  /* 1. render the floating calendar as a luminance image */
- oc.globalAlpha=1;oc.fillStyle='#fff';oc.fillRect(0,0,off.width,off.height);
+ lum.fill(0);zb.fill(-1e9);
  layer({tex:bodyTex(),cols:BC,rows:BR,W:BW,H:BH,y0:BY,seed:3,alpha:.9});
  const sN=t-n*PERIOD,rv=E(cl((sN-.4)/1.4));
  for(let j=n+3;j>=n+1;j--){const dep=j-tt,o=base(j);
-  Object.assign(o,{dy:dep*9,dz:-dep*12,alpha:1-.1*dep,tone:dep>1.3?1:0,reveal:j===n+1?rv:0});layer(o)}
+  Object.assign(o,{dy:dep*9,dz:-dep*12,alpha:1-.1*dep,dim:cl((dep-.8)*.3),reveal:j===n+1?1:0});layer(o)}
  for(const j of [n-1,n]){const s=t-j*PERIOD;if(s>=LIFE)continue;
   const o=base(j);Object.assign(o,pageState(s));o.r0=0;layer(o)}
  /* 2. glow + shadow (smooth, behind glyphs) */
@@ -117,12 +118,12 @@ function frame(now){
  gr.addColorStop(0,'rgba(91,63,211,.05)');gr.addColorStop(1,'rgba(91,63,211,0)');
  ctx.fillStyle=gr;ctx.fillRect(-900,-900,1800,1800);
  /* 3. fixed grid: every glyph stays put and upright; only its tone and digit change */
- sx_.drawImage(off,0,0,GC,GRW);
- const px=sx_.getImageData(0,0,GC,GRW).data;
+ 
+ 
  ctx.setTransform(1,0,0,1,0,0);
  const dw=cpx*1.12,dh=cph*1.2;
  for(let gy=0;gy<GRW;gy++)for(let gx=0;gx<GC;gx++){
-  const d=1-px[(gy*GC+gx)*4]/255;if(d<.05)continue;
+  const i0=(gy*2)*HW+gx*2,d=(lum[i0]+lum[i0+1]+lum[i0+HW]+lum[i0+HW+1])/4;if(d<.05)continue;
   const lv=Math.min(5,Math.floor(Math.pow(d,.9)*5.8));
   let h=Math.imul(gx+7,374761393)^Math.imul(gy+3,668265263);h=Math.imul(h^(h>>>13),1274126177);h^=h>>>16;
   const bit=((h>>>6)+Math.floor(T6*.8+((h>>>14)&31)*.31))&1;
