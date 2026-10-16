@@ -82,6 +82,7 @@ The popup does not inspect the active tab or claim that a particular Calendar pa
 - **Initial Calendar load:** wait briefly for its DOM to settle before adding labels, avoiding insertion into transient event blocks. The settling window is 250ms of quiet, capped at two seconds once settings are available.
 - **Navigation, time edits, or resizing:** re-evaluate time text and available space, update the existing label, remove stale labels, and avoid duplicates.
 - **All-day, single-start-time, ambiguous or unsupported event:** no duration label. Do not use an error badge or estimate from the event's pixel height.
+- **Event details popup:** when a user clicks an event, the duration appears after the date and time line (for example "Sunday, October 18 · 1:45 – 3:20pm 1h 35m") in the chosen style, for every event length. It follows the on/off switch.
 - **Too little space:** no label; the original time stays intact. A wider event or shorter style may allow it to return.
 - **Unsupported view:** no labels. Current scope is explicit Day and Week routes only.
 

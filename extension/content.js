@@ -65,8 +65,12 @@
           badge.dataset.color = color;
         }
         if (badge.dataset.style !== durationStyle) badge.dataset.style = durationStyle;
-        const font = durationStyle === 'text' ? getComputedStyle(times[0]).font : '';
+        const timeStyle = getComputedStyle(times[0]);
+        const font = durationStyle === 'text' ? timeStyle.font : '';
         if (badge.style.font !== font) badge.style.font = font;
+        const timeLine = parseFloat(timeStyle.lineHeight) || times[0].getBoundingClientRect().height;
+        const lineHeight = durationStyle === 'box' && timeLine < 16 ? Math.max(10, timeLine - 2) + 'px' : '';
+        if (badge.style.lineHeight !== lineHeight) badge.style.lineHeight = lineHeight;
         if (badge.textContent !== format(minutes, durationStyle)) badge.textContent = format(minutes, durationStyle);
         const timeRect = times[0].getBoundingClientRect();
         const eventRect = event.getBoundingClientRect();
@@ -80,7 +84,7 @@
         const range = document.createRange();
         range.selectNodeContents(times[0]);
         const textWidth = range.getBoundingClientRect().width;
-        const layout = textWidth + badgeWidth + 6 <= available && timeRect.top + badgeHeight <= Math.max(bottom, timeRect.bottom) ? 'inline' : 'hidden';
+        const layout = textWidth + badgeWidth + 6 <= available && timeRect.top + Math.min(badgeHeight, timeLine) <= Math.max(bottom, timeRect.bottom) + 1 ? 'inline' : 'hidden';
         if (times[0].hasAttribute('data-calendar-length-inline') !== (layout === 'inline')) times[0].toggleAttribute('data-calendar-length-inline', layout === 'inline');
         if (badge.dataset.layout !== layout) badge.dataset.layout = layout;
         if (!sizedEvents.has(event)) {
@@ -88,6 +92,28 @@
           resizeObserver.observe(event);
         }
         kept.add(badge);
+      }
+    }
+    if (enabled) {
+      for (const dialog of document.querySelectorAll('[role="dialog"]')) {
+        for (const line of dialog.querySelectorAll('div, span')) {
+          if (line.closest(eventSelector) || line.querySelector('div') || line.matches(badgeSelector)) continue;
+          const text = [...line.childNodes].filter((node) => !node.matches?.(badgeSelector)).map((node) => node.textContent).join('');
+          const match = /[·⋅•]\s*([^·⋅•]+)$/.exec(text);
+          const minutes = match && duration(match[1]);
+          if (!minutes) continue;
+          let badge = line.querySelector(':scope > [data-calendar-length]');
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.setAttribute('data-calendar-length', '');
+            badge.setAttribute('aria-hidden', 'true');
+            badge.dataset.layout = 'detail';
+            line.append(badge);
+          }
+          if (badge.dataset.style !== durationStyle) badge.dataset.style = durationStyle;
+          if (badge.textContent !== format(minutes, durationStyle)) badge.textContent = format(minutes, durationStyle);
+          kept.add(badge);
+        }
       }
     }
     for (const badge of document.querySelectorAll(badgeSelector)) {

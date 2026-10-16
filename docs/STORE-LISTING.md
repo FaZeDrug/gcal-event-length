@@ -29,11 +29,12 @@ Open the extension's popup to turn durations on or off and switch styles. Your p
 Designed to stay out of your way:
 • Duration text uses black or white for contrast.
 • Labels stay beside the original time and are omitted when they cannot fit.
+• Click any event to see its duration next to the time in the event details popup, even for short events.
 • Labels do not intercept event clicks or add keyboard tab stops.
 • Calendar data is processed locally; event content is not stored or sent anywhere.
 • No separate account, backend, analytics, or external API is required.
 
-Current limits: supports unambiguous same-day time ranges in English AM/PM and 24-hour formats. Events of about 30 minutes or less are skipped, because Google Calendar shows only their start time. All-day events, overnight/multi-day ranges, ambiguous times, and unsupported locales are also skipped. Google Calendar interface changes may require extension updates.
+Current limits: supports unambiguous same-day time ranges in English AM/PM and 24-hour formats. Events of about 30 minutes or less don't get a label in the grid, because Google Calendar shows only their start time there; click the event to see its duration in the details popup. All-day events, overnight/multi-day ranges, ambiguous times, and unsupported locales are also skipped. Google Calendar interface changes may require extension updates.
 
 This is an independent extension and is not affiliated with or endorsed by Google.
 
