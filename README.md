@@ -2,11 +2,11 @@
 
 **See how long an event lasts, right beside its time.**
 
-An independent Chrome extension for Google Calendar's Day and Week views. Choose an outlined duration badge or simple parentheses from a small, animated sakura popup.
+An independent Chrome extension for Google Calendar's Day and Week views. Turn durations on or off and choose an outlined badge or simple parentheses from a small monochrome popup with an animated purple ASCII tear-away calendar.
 
-<img src="docs/images/popup.png" width="360" height="560" alt="The extension's sakura popup, with a Show durations on/off switch and Outlined box and Parentheses style choices">
+<img src="docs/images/popup.png" width="300" height="400" alt="The Event Duration popup: a purple ASCII tear-away calendar above a Show durations switch and Outlined box and Parentheses style choices">
 
-*Screenshot of the real unpacked extension popup, at its actual 360 × 560 size.*
+*Screenshot of the real unpacked extension popup, at its actual 300 × 400 size.*
 
 ## What it does
 
@@ -14,7 +14,7 @@ An independent Chrome extension for Google Calendar's Day and Week views. Choose
 - Puts durations **beside the time**, including tall events and events with locations.
 - Uses black or white for contrast, and hides the label when it cannot fit without covering the original time.
 - Saves your style choice locally and updates open Calendar tabs automatically.
-- Adds gentle dithered sakura motion **only inside the popup**. Reduced-motion preferences produce a static scene; closing or hiding the popup stops animation.
+- Animates a purple ASCII tear-away calendar **only inside the popup**. Reduced-motion preferences draw a single still frame; closing or hiding the popup stops animation.
 
 No backend, external API, analytics, or separate sign-in. Not affiliated with or endorsed by Google.
 
@@ -53,7 +53,7 @@ The extension reads supported Calendar event time text and nearby DOM metadata *
 - **`storage`:** remembers whether durations are on and which style you chose, and updates other open Calendar tabs.
 - Fonts, illustration, scripts, and fallback artwork are packaged locally; there are no remote assets.
 
-Read the [privacy policy](PRIVACY.md). The sakura illustration is decorative and cannot intercept clicks or keyboard focus.
+Read the [privacy policy](PRIVACY.md). The calendar animation is decorative and cannot intercept clicks or keyboard focus.
 
 ## Publish your own copy
 
@@ -89,7 +89,7 @@ Outputs go to `artifacts/`:
 
 ## Verification
 
-The test suite covers time parsing, manifest scope, duplicate/stale-label cleanup, inline fit, contrast, navigation, and actual MV3 injection on controlled Calendar-origin fixtures. It loads the real popup and checks both style choices, persistence after reopening, instant changes in two supported fixture tabs, keyboard focus, loading/saving/error states, motion, reduced motion, hidden-page pausing, fallback artwork, dimensions, and absence of remote requests.
+The test suite covers time parsing, manifest scope, duplicate/stale-label cleanup, inline fit, contrast, navigation, and actual MV3 injection on controlled Calendar-origin fixtures. It loads the real popup and checks the exact 300 × 400 size with no overflow, monochrome UI colors, the on/off switch, both style choices, persistence after reopening, instant changes in two supported fixture tabs, keyboard focus, loading/saving/error states, motion, reduced motion, hidden-page pausing, device-resolution canvas, and absence of remote requests.
 
 Earlier versions were inspected on live Google Calendar for Day/Week labels, navigation, and clicking. **This release's automated Calendar checks use controlled fixtures**, not a fresh live Calendar session. Before publishing, run the manual checklist in [PUBLISHING.md](docs/PUBLISHING.md), especially real event edits and drag/resize behavior.
 
@@ -100,7 +100,9 @@ extension/       Installable Manifest V3 extension
 tests/           Parser, Calendar-fixture, and real-popup tests
 docs/            Screenshots, store copy, and publishing guide
 scripts/         Demo server and ZIP packaging
-design-preview/  Historical, standalone sakura design sandbox
+design-preview/  Historical sakura design sandbox (no longer shipped)
 ```
 
-The popup uses the locally bundled Inter font; its licenses are in `extension/fonts/`. No React or shader dependency is required.
+The popup uses the locally bundled Inter font; its licenses are in `extension/fonts/`. The animation in `extension/calendar.js` is the supplied tear-away calendar script, adapted only to size itself to the popup canvas, pause when hidden, and draw a still frame for reduced motion.
+
+**Heading font:** the design uses **Daisler Light** (Eko Bimantara). No licensed font file is in this repository, and the free trial is personal-use only, so it is not bundled. The popup uses Daisler Light if it is installed on the computer and otherwise falls back to Georgia. To ship it, buy a license that permits embedding the font in distributed software (a desktop or webfont license alone does not cover that; confirm with the foundry), add the file to `extension/fonts/`, and point the `Daisler` `@font-face` in `popup.css` at it.

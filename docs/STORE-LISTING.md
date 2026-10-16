@@ -1,6 +1,6 @@
 # Chrome Web Store listing copy
 
-Review this before submitting; it describes version 0.5.0, not planned features.
+Review this before submitting; it describes version 0.6.0, not planned features.
 
 ## Name
 
@@ -24,7 +24,7 @@ Choose the style you prefer:
 • Outlined badges, such as “1h 30m”
 • Simple parentheses, such as “(1 hr 30 min)”
 
-Open the extension's sakura-themed popup to turn durations on or off and switch styles. Your preferences save automatically and updates open Calendar tabs. The popup includes gently animated, dithered cherry blossoms and respects your system's reduced-motion preference.
+Open the extension's popup to turn durations on or off and switch styles. Your preferences save automatically and update open Calendar tabs. The popup shows a small animated ASCII tear-away calendar and respects your system's reduced-motion preference.
 
 Designed to stay out of your way:
 • Duration text uses black or white for contrast.

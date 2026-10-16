@@ -1,6 +1,6 @@
 # Privacy policy — Google Calendar Event Length
 
-Effective date: October 12, 2026. Applies to version 0.5.0.
+Effective date: October 12, 2026. Applies to version 0.6.0.
 
 Google Calendar Event Length is an independent browser extension and is not affiliated with or endorsed by Google.
 
@@ -12,7 +12,7 @@ The popup saves two preferences using Chrome's local extension storage: `duratio
 
 ## What we do not collect or share
 
-The extension has no developer-operated backend, analytics, advertising, telemetry, remote fonts, or external API requests. It does not collect account credentials or cookies, record browsing history, sell data, or share event information. The sakura animation runs locally and uses no user data.
+The extension has no developer-operated backend, analytics, advertising, telemetry, remote fonts, or external API requests. It does not collect account credentials or cookies, record browsing history, sell data, or share event information. The calendar animation runs locally and uses no user data.
 
 Google Calendar itself and Chrome operate independently under their own policies. This policy covers this extension, not Google's services. If you contact the developer or open a GitHub issue, information you voluntarily submit is handled by that communication service; do not include private calendar data in public issues.
 

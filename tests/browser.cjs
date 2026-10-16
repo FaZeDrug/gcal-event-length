@@ -166,7 +166,7 @@ const server = require('../scripts/demo.cjs');
     const extensionId = await extensions.locator('extensions-item').first().getAttribute('id');
     await extensions.close();
     let popup = await context.newPage();
-    await popup.setViewportSize({ width: 360, height: 560 });
+    await popup.setViewportSize({ width: 300, height: 400 });
     await popup.goto(`chrome-extension://${extensionId}/popup.html`);
     await popup.waitForFunction(() => !document.querySelector('fieldset').disabled);
     assert.equal(await popup.locator('input[value="box"]').isChecked(), true);
@@ -178,18 +178,18 @@ const server = require('../scripts/demo.cjs');
     await secondCalendar.goto('https://calendar.google.com/calendar/u/0/r/day');
     await secondCalendar.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '1h');
     await popup.check('input[value="text"]');
-    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Saved.');
+    await popup.waitForFunction(() => document.querySelector('#status').textContent === '✓ Saved automatically');
     await isolated.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '(1 hr)');
     await secondCalendar.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '(1 hr)');
     assert.equal(await popup.locator('#enabled').isChecked(), true);
     await popup.locator('#enabled').click();
-    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Durations off.');
-    assert.equal(await popup.locator('#state').innerText(), 'Off');
+    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Off · preference saved');
+    assert.equal(await popup.evaluate(() => document.body.classList.contains('off')), true);
     for (const tab of [isolated, secondCalendar]) {
       await tab.waitForFunction(() => !document.querySelector('[data-calendar-length], [data-calendar-length-inline]'));
     }
     await popup.locator('#enabled').click();
-    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Durations on.');
+    await popup.waitForFunction(() => document.querySelector('#status').textContent === '✓ Saved automatically');
     for (const tab of [isolated, secondCalendar]) {
       await tab.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '(1 hr)');
     }
@@ -209,7 +209,7 @@ const server = require('../scripts/demo.cjs');
     await isolated.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '1h');
     assert.equal(await isolated.locator('#tall [data-calendar-length]').evaluate((node) => getComputedStyle(node).borderTopWidth), '1px');
     await popup.locator('#enabled').click();
-    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Durations off.');
+    await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Off · preference saved');
     await popup.close();
     await isolated.reload();
     await isolated.waitForTimeout(2500);

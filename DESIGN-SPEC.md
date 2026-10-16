@@ -1,6 +1,6 @@
 # Calendar Event Length — design specification
 
-Implementation reference: version 0.5.0. The popup now integrates the approved sakura study: a 360×560 dark-purple surface, contained milky-white vignette, locally rendered dithered blossoms, a native **Show durations** on/off switch, and native radio controls for the two duration styles.
+Implementation reference: version 0.6.0, matching the approved monochrome Figma frames (`35:2` enabled/box, `35:30` enabled/parentheses, `35:58` disabled). The popup is 300×400 with a white background and square outer corners. Every UI element is black, grey, or white; only the animated ASCII tear-away calendar is purple. Heading **Event Duration** in Daisler Light (see the font-license note in the README).
 
 ## Product in one sentence
 
@@ -38,33 +38,40 @@ Parentheses keep exact minutes rather than decimal-hour rounding. `hr` and `min`
 
 ## Popup layout and behavior
 
-Suggested information order, implemented with native HTML controls:
+Information order, implemented with native HTML controls (measured from Figma at 2×; values in CSS px):
 
-1. Heading: **Google Calendar Event Length**.
-2. Short description: **Show event durations beside the time in Google Calendar.**
-3. A **Show durations** switch (`checkbox` with `role="switch"`) with a visible **On**/**Off** word. On is the default. Off removes every label from open Calendar tabs and dims the style choices, which stay selectable so the next On uses them.
+- Animated calendar canvas: 300×200 at the top, calendar body about 145 wide, filling the upper area. The detached page drifts out at the top right.
+- Left/right margin 18. Heading 24px, top 198.5. Subtitle 10px grey `#808080`. Show durations row 12px at y 250 with a 32×18 switch (on `#1f1f1f`, off `#c7c7c7`).
+- Legend 8px uppercase grey. Options 264×33.5, radius 6, 6.5 apart; unselected border `#d9d9d9`, selected border `#666` on `#f6f6f6`. 14px radio, 11px label, 30×21 `1h` preview box with radius 3.
+- Status 9px grey: “✓ Saved automatically” when on, “Off · preference saved” when off.
+- Off state: switch grey, option text `#979797`, borders `#ececec`. The chosen style stays marked with a grey radio so it is still visible which style returns when durations turn on (the Figma frame shows no radio filled; this is a deliberate accessibility deviation).
+
+Content:
+
+1. Heading: **Event Duration**.
+2. Short description: **Show event lengths in Google Calendar.**
+3. A **Show durations** switch (`checkbox` with `role="switch"`). On is the default. Off removes every label from open Calendar tabs and dims the style choices, which stay selectable so the next On uses them.
 4. Fieldset named **Duration style**, with two mutually exclusive radio choices:
    - **Outlined box**, with a boxed `1h` sample.
    - **Parentheses**, with a `(1 hr)` sample.
 5. A status line for loading, saving, saved, or error feedback.
-6. Supporting copy: **Changes apply automatically to open Calendar tabs. Day and Week views only.**
 
 Flipping the switch or selecting a radio saves immediately. There is no Save/Apply button. Existing supported Calendar tabs update without refreshing. The choice persists across popup closures and page reloads in the same Chrome profile, and is stored on that device, not synced to other devices. The initial default is Outlined box. Unknown saved values fall back to that default.
 
-The current popup is 360px wide and 560px tall. It uses native radio semantics, visible keyboard focus, readable labels, and a live status region. Decoration is clipped above the heading, aria-hidden, and non-interactive. Reduced motion uses a static scene; animation stops while the popup is hidden or unloaded. Scripts, fonts, icons, and the SVG fallback poster are packaged locally.
+The popup is exactly 300px wide and 400px tall with no scrolling. It uses native switch and radio semantics, visible black keyboard focus rings, and a live status region. The calendar canvas is aria-hidden and non-interactive, renders at device resolution (up to 2×) for crisp glyphs, draws a single still frame for reduced motion, and stops while the popup is hidden or closed. Scripts and fonts are packaged locally; the extension CSP blocks inline and remote scripts, so the animation lives in `calendar.js`.
 
 ## Popup states to mock up
 
 | State | Control behavior | Feedback |
 | --- | --- | --- |
-| Opening/loading | Switch and radios disabled until preferences load | “Loading preference…” |
-| Ready, box selected | Box radio checked | “Preferences saved on this device.” |
-| Switched off | Switch shows Off; style cards dimmed but selectable; labels removed from Calendar tabs | “Durations off.” |
-| Switched on | Switch shows On; labels return in the chosen style | “Durations on.” |
+| Opening/loading | Switch and radios disabled until preferences load | “Loading…” |
+| Ready, box selected | Box radio checked | “✓ Saved automatically” |
+| Switched off | Switch grey; style cards dimmed but selectable; labels removed from Calendar tabs | “Off · preference saved” |
+| Switched on | Switch dark; labels return in the chosen style | “✓ Saved automatically” |
 | Switch save error | Switch returns to its previous position | “Could not save. Try the switch again.” |
 | Ready, parentheses selected | Parentheses radio checked | Same ready message |
 | Saving | Radios temporarily disabled | “Saving…” |
-| Saved | Selected radio checked; controls enabled | “Saved.” |
+| Saved | Selected radio checked; controls enabled | “✓ Saved automatically” |
 | Load failed | Controls disabled | Close and reopen to retry |
 | Save failed | Controls enabled; failed selection cleared | Select a style again to retry |
 
