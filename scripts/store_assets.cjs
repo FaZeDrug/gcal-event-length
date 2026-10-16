@@ -30,7 +30,6 @@ const popup = (state, left = 130) => `<div class="card popup" style="left:${left
 const calendar = (state) => `<div class="card dark" style="left:590px; top:256px; width:560px;"><img src="${img('calendar-' + state + '.png')}"></div>`;
 
 const pages = {
-  'screenshot-1-box.png': [1280, 800, head('See event durations <em>at a glance</em>', 'A small label beside each event time in Google Calendar') + popup('box', 190) + `<div class="card dark" style="left:650px; top:256px; width:440px;"><img src="${img('calendar-hero.png')}"></div>`],
   'screenshot-2-text.png': [1280, 800, head('Prefer plain text? Use <em>parentheses</em>', 'Switch styles in one click. Open Calendar tabs update instantly') + popup('text') + calendar('text')],
   'screenshot-3-details.png': [1280, 800, head('Click any event to see <em>its length</em>', 'The duration also appears in Calendar’s event details') + popup('box') + `
     <div class="card dark" style="left:590px; top:300px; width:560px; padding:34px 40px 38px; background:#1e1f20;">
