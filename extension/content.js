@@ -47,9 +47,13 @@
         const times = [...event.querySelectorAll(timeSelector)].filter((node) =>
           node.closest(eventSelector) === event && !node.querySelector(timeSelector)
         );
-        const parsed = times.map((node) => duration(node.textContent));
-        if (parsed.length !== 1 || parsed[0] === null) continue;
-        const minutes = parsed[0];
+        if (times.length !== 1) continue;
+        const host = event.closest('[data-eventid]');
+        const minutes = duration(times[0].textContent) || [host, event, ...host.querySelectorAll('*')]
+          .filter((node) => node === host || node === event || (!node.children.length && !node.closest('[aria-hidden="true"]')))
+          .map((node) => duration(((node === host || node === event ? node.getAttribute('aria-label') : node.textContent) || '').split(',')[0]))
+          .find(Boolean);
+        if (!minutes) continue;
         let badge = event.querySelector(badgeSelector);
         if (!badge) {
           badge = document.createElement('span');

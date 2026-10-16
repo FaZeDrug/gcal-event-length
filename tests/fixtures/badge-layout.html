@@ -15,6 +15,12 @@
   #compact { height: 34px; padding: 2px 8px 0; background: #f4cbeb; }
   #tight { height: 29px; padding: 1px 8px 0; background: #e9bf4e; }
   #tight .title, #tight .gVNoLb { line-height: 14px; }
+  #single30 { height: 24px; padding: 1px 8px 0; background: #b9dcf5; }
+  #single15 { height: 12px; padding: 0 8px; background: #e9bf4e; font-size: 11px; }
+  #single15 .row { line-height: 12px; }
+  #range33 { height: 26px; padding: 1px 8px 0; background: #f4cbeb; }
+  .row { display: flex; white-space: nowrap; line-height: 16px; }
+  .XuJrye { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   #narrow { height: 54px; width: 90px; background: #e9bf4e; }
 </style>
 <h1>Black/white contrast & space-aware labels</h1>
@@ -27,5 +33,8 @@
   <section><h2>Tight 14px lines</h2><div id="tight" class="event" data-eventid="tight" role="button"><div class="title">Busy</div><div class="gVNoLb EiZ8Dd">3 – 3:45pm</div></div></section>
   <section><h2>Too narrow: keep time, omit badge</h2><div id="narrow" class="event" data-eventid="narrow" role="button"><div class="title">Busy</div><div class="gVNoLb EiZ8Dd">2 – 2:45pm</div></div></section>
   <section><h2>Location: also beside the time</h2><div id="location" class="event" data-eventid="location" role="button"><div class="title">Appointment</div><div class="gVNoLb EiZ8Dd">10am – 9pm</div><div class="K9QN7e EiZ8Dd">Example venue</div></div></section>
+  <section><h2>30 min: Calendar shows only the start</h2><div id="single30" class="event" data-eventid="single30" role="button"><div class="XuJrye">2pm to 2:30pm, Standup, Example calendar, October 18, 2026</div><div aria-hidden="true" class="row"><div class="title">Standup,&nbsp;</div><div class="gVNoLb EiZ8Dd">2pm</div></div></div></section>
+  <section><h2>15 min: one 12px line</h2><div id="single15" class="event" data-eventid="single15" role="button"><div class="XuJrye">9:15am to 9:30am, Check-in, Example calendar, October 18, 2026</div><div aria-hidden="true" class="row"><div class="title">Check-in,&nbsp;</div><div class="gVNoLb EiZ8Dd">9:15am</div></div></div></section>
+  <section><h2>33 min: range on a clipped second line</h2><div id="range33" class="event" data-eventid="range33" role="button"><div class="title">Review</div><div class="gVNoLb EiZ8Dd">4 – 4:33pm</div></div></section>
 </main>
 </html>

@@ -106,6 +106,11 @@ const server = require('../scripts/demo.cjs');
     assert.equal(await isolated.locator('#compact [data-calendar-length]').getAttribute('data-layout'), 'inline', 'Compact event whose time sits on its last line still gets a label');
     assert.equal(await isolated.locator('#tight [data-calendar-length]').getAttribute('data-layout'), 'inline', 'Label shrinks to a 14px time line');
     assert.equal(await isolated.locator('#tight [data-calendar-length]').evaluate((node) => node.getBoundingClientRect().bottom <= node.closest('.event').getBoundingClientRect().bottom + 1), true);
+    for (const [id, text] of [['single30', '30m'], ['single15', '15m'], ['range33', '33m']]) {
+      assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).textContent(), text, `${id} reads its duration`);
+      assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).getAttribute('data-layout'), 'inline', `${id} shows its label`);
+      assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).evaluate((node) => node.getBoundingClientRect().top >= node.previousElementSibling.getBoundingClientRect().top - 1 && node.getBoundingClientRect().bottom <= node.previousElementSibling.getBoundingClientRect().bottom + 1), true, `${id} label stays on the time line`);
+    }
     assert.equal(await isolated.locator('#location [data-calendar-length]').getAttribute('data-layout'), 'inline');
     for (const [id, color] of [['short', 'rgb(0, 0, 0)'], ['dark', 'rgb(255, 255, 255)']]) {
       const badge = isolated.locator(`#${id} [data-calendar-length]`);
@@ -187,6 +192,17 @@ const server = require('../scripts/demo.cjs');
     await isolated.evaluate(() => document.body.insertAdjacentHTML('beforeend', '<div role="dialog" id="details"><div>Sunday, October 18<span aria-hidden="true">⋅</span>2 – 2:15pm</div><div>30 minutes before</div></div>'));
     await isolated.waitForFunction(() => document.querySelector('#details [data-calendar-length]')?.textContent === '(15 min)');
     assert.equal(await isolated.locator('#details [data-calendar-length]').count(), 1, 'Event details show one duration, even for short events');
+    const detailOffset = (id) => isolated.evaluate((id) => {
+      const badge = document.querySelector(`#${id} [data-calendar-length]`);
+      const range = document.createRange();
+      range.selectNodeContents(badge.parentElement.lastChild === badge ? badge.previousSibling : badge.parentElement.firstChild);
+      const text = range.getBoundingClientRect();
+      const label = badge.dataset.style === 'text' ? (range.selectNodeContents(badge), range.getBoundingClientRect()) : badge.getBoundingClientRect();
+      return Math.abs((label.top + label.bottom) / 2 - (text.top + text.bottom) / 2);
+    }, id);
+    await isolated.evaluate(() => document.body.insertAdjacentHTML('beforeend', '<div role="dialog" id="details3" style="font: 14px/20px Arial"><div style="display: flex">Sunday, October 18<span aria-hidden="true">⋅</span>2 – 2:30pm</div></div>'));
+    await isolated.waitForFunction(() => document.querySelector('#details3 [data-calendar-length]')?.textContent === '(30 min)');
+    for (const id of ['details', 'details3']) assert.ok(await detailOffset(id) <= 1.5, `${id} text duration is centered on the time`);
     assert.equal(await popup.locator('#enabled').isChecked(), true);
     await popup.locator('#enabled').click();
     await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Off · preference saved');
@@ -215,6 +231,9 @@ const server = require('../scripts/demo.cjs');
     await isolated.waitForFunction(() => document.querySelector('#tall [data-calendar-length]')?.textContent === '1h');
     await isolated.evaluate(() => document.body.insertAdjacentHTML('beforeend', '<div role="dialog" id="details2"><div>Sunday, October 18<span aria-hidden="true">⋅</span>3:45 – 4:30pm</div></div>'));
     await isolated.waitForFunction(() => document.querySelector('#details2 [data-calendar-length]')?.textContent === '45m');
+    await isolated.evaluate(() => document.body.insertAdjacentHTML('beforeend', '<div role="dialog" id="details3" style="font: 14px/20px Arial"><div style="display: flex">Sunday, October 18<span aria-hidden="true">⋅</span>2 – 2:30pm</div></div>'));
+    await isolated.waitForFunction(() => document.querySelector('#details3 [data-calendar-length]')?.textContent === '30m');
+    for (const id of ['details2', 'details3']) assert.ok(await detailOffset(id) <= 1.5, `${id} box duration is centered on the time`);
     assert.equal(await isolated.locator('#tall [data-calendar-length]').evaluate((node) => getComputedStyle(node).borderTopWidth), '1px');
     await popup.locator('#enabled').click();
     await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Off · preference saved');
