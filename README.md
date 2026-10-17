@@ -32,7 +32,7 @@ This version's design is inspired by [this post by @praveenisomer](https://x.com
 - Puts durations **beside the time**, including tall events and events with locations.
 - Labels **short events** too, even when Calendar shows only a start time like `busy, 1:30pm`.
 - Shows the duration next to the time when you **click an event** and its details open.
-- Uses black or white for contrast, and hides the label when it cannot fit without covering the original time.
+- Uses black or white for contrast. In a narrow column, a tall event shows the label just below its time; if there is no room at all, the label is hidden rather than covering the time.
 - Saves your style choice locally and updates open Calendar tabs automatically.
 - Animates a purple ASCII tear-away calendar **only inside the popup**. Reduced-motion preferences draw a single still frame; closing or hiding the popup stops animation.
 

@@ -19,6 +19,7 @@
 [data-calendar-length][data-style="text"] { border: 0; padding: 0; border-radius: 0; }
 [data-calendar-length-inline] { display: inline-block !important; width: auto !important; vertical-align: top; }
 [data-calendar-length][data-layout="inline"] { display: inline-block; margin: 0 0 0 4px; vertical-align: top; }
+[data-calendar-length][data-layout="below"] { display: block; margin: 2px 0 0; }
 [data-calendar-length][data-layout="hidden"] { display: none; }
 [data-calendar-length][data-layout="detail"] { display: inline; width: auto; margin: 0 0 0 8px; vertical-align: middle; align-self: center; color: inherit; font: inherit; font-size: .85em; line-height: normal; overflow: visible; }
 [data-calendar-length][data-layout="detail"][data-style="text"] { font-size: inherit; line-height: inherit; vertical-align: baseline; margin-left: 6px; }
