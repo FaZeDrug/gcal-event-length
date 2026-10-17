@@ -112,6 +112,9 @@ const server = require('../scripts/demo.cjs');
       assert.equal(await isolated.locator(`#${id} [data-calendar-length]`).evaluate((node) => node.getBoundingClientRect().top >= node.previousElementSibling.getBoundingClientRect().top - 1 && node.getBoundingClientRect().bottom <= node.previousElementSibling.getBoundingClientRect().bottom + 1), true, `${id} label stays on the time line`);
     }
     assert.equal(await isolated.locator('#range33 [data-calendar-length]').getAttribute('data-layout'), 'hidden', 'A time row clipped by the event bottom gets no label');
+    assert.equal(await isolated.locator('#tallnarrow [data-calendar-length]').textContent(), '7h 30m');
+    assert.equal(await isolated.locator('#tallnarrow [data-calendar-length]').getAttribute('data-layout'), 'below', 'A tall event too narrow for the label beside its time shows it below the time');
+    assert.equal(await isolated.locator('#tallnarrow [data-calendar-length]').evaluate((node) => { const time = node.previousElementSibling.getBoundingClientRect(), badge = node.getBoundingClientRect(), event = node.closest('.event').getBoundingClientRect(); return badge.top >= time.bottom && badge.left === time.left && badge.bottom <= event.bottom && badge.right <= event.right; }), true);
     assert.equal(await isolated.locator('#real15narrow [data-calendar-length]').getAttribute('data-layout'), 'hidden', 'Narrow 15 min chip keeps its time and skips the label');
     assert.equal(await isolated.locator('#location [data-calendar-length]').getAttribute('data-layout'), 'inline');
     for (const [id, color] of [['short', 'rgb(0, 0, 0)'], ['dark', 'rgb(255, 255, 255)']]) {
