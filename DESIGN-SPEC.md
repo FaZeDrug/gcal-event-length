@@ -1,6 +1,6 @@
 # Calendar Event Length — design specification
 
-Implementation reference: version 0.6.0, matching the approved monochrome Figma frames (`35:2` enabled/box, `35:30` enabled/parentheses, `35:58` disabled). The popup is 300×400 with a white background and square outer corners. Every UI element is black, grey, or white; only the animated ASCII tear-away calendar is purple. Heading **Event Duration** in Daisler Light (see the font-license note in the README).
+Implementation reference: version 0.6.1, matching the approved monochrome Figma frames (`35:2` enabled/box, `35:30` enabled/parentheses, `35:58` disabled). The popup is 300×400 with a white background and square outer corners. Every UI element is black, grey, or white; only the animated ASCII tear-away calendar is purple. Heading **Event Duration** in Daisler Light (see the font-license note in the README).
 
 ## Product in one sentence
 

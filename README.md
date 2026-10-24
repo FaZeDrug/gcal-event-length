@@ -42,7 +42,7 @@ No backend, external API, analytics, or separate sign-in. Not affiliated with or
 
 **From the Chrome Web Store (recommended):** open [Google Calendar Event Length on the Chrome Web Store](https://chromewebstore.google.com/detail/noigmncmopplmmbnnddkdbkihnjlimne), click **Add to Chrome**, then refresh Google Calendar and choose **Day** or **Week**. Chrome keeps it updated for you.
 
-The store currently has version 0.5.0. Version 0.6.0 in this repository (the monochrome popup, short-event labels, and durations in the event-details popup) will reach the store as an update after review. To try 0.6.0 before then, load it unpacked:
+The store has version 0.6.0. Version 0.6.1 in this repository (labels below the time on tall, narrow events) will reach the store as an update after review. To try it before then, load it unpacked:
 
 1. Extract the **install ZIP**, or download this repository.
 2. In Chrome, open **`chrome://extensions`** and turn on **Developer mode**.

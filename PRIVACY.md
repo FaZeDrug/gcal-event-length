@@ -1,6 +1,6 @@
 # Privacy policy — Google Calendar Event Length
 
-Effective date: October 12, 2026. Applies to version 0.6.0.
+Effective date: October 12, 2026. Applies to version 0.6.1.
 
 Google Calendar Event Length is an independent browser extension and is not affiliated with or endorsed by Google.
 
