@@ -4,7 +4,7 @@ You can use the extension locally right now. Publishing is a separate process: *
 
 ## 1. Do the last manual checks
 
-Use the 0.6.0 install ZIP on your own Chrome before submitting:
+Use the 0.6.1 install ZIP on your own Chrome before submitting:
 
 - [ ] Load/reload the extension and refresh Calendar.
 - [ ] Open the toolbar popup; confirm the 300×400 layout and keyboard focus are readable.
@@ -25,7 +25,7 @@ Google may ask for additional publisher verification or regional disclosures. Co
 
 ## 3. Upload the correct ZIP
 
-Run `python3 scripts/package.py`, or use the supplied **`google-calendar-event-length-0.6.0-store.zip`**.
+Run `python3 scripts/package.py`, or use the supplied **`google-calendar-event-length-0.6.1-store.zip`**.
 
 Choose **Add new item → Choose file → Upload** in the dashboard. Upload the ZIP as-is. `manifest.json` must be at its root.
 

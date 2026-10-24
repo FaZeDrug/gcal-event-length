@@ -98,7 +98,9 @@
         const range = document.createRange();
         range.selectNodeContents(times[0]);
         const textWidth = range.getBoundingClientRect().width;
-        const layout = textWidth + badgeWidth + 6 <= available && timeRect.top + badgeHeight <= bottom ? 'inline' : 'hidden';
+        const beside = textWidth + badgeWidth + 6 <= available && timeRect.top + badgeHeight <= bottom;
+        const below = badgeWidth <= available && timeRect.bottom + badgeHeight + 2 <= bottom;
+        const layout = beside ? 'inline' : below ? 'below' : 'hidden';
         if (times[0].hasAttribute('data-calendar-length-inline') !== (layout === 'inline')) times[0].toggleAttribute('data-calendar-length-inline', layout === 'inline');
         if (badge.dataset.layout !== layout) badge.dataset.layout = layout;
         if (!sizedEvents.has(event)) {

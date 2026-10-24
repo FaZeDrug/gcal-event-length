@@ -32,7 +32,7 @@ This version's design is inspired by [this post by @praveenisomer](https://x.com
 - Puts durations **beside the time**, including tall events and events with locations.
 - Labels **short events** too, even when Calendar shows only a start time like `busy, 1:30pm`.
 - Shows the duration next to the time when you **click an event** and its details open.
-- Uses black or white for contrast, and hides the label when it cannot fit without covering the original time.
+- Uses black or white for contrast. In a narrow column, a tall event shows the label just below its time; if there is no room at all, the label is hidden rather than covering the time.
 - Saves your style choice locally and updates open Calendar tabs automatically.
 - Animates a purple ASCII tear-away calendar **only inside the popup**. Reduced-motion preferences draw a single still frame; closing or hiding the popup stops animation.
 
@@ -42,7 +42,7 @@ No backend, external API, analytics, or separate sign-in. Not affiliated with or
 
 **From the Chrome Web Store (recommended):** open [Google Calendar Event Length on the Chrome Web Store](https://chromewebstore.google.com/detail/noigmncmopplmmbnnddkdbkihnjlimne), click **Add to Chrome**, then refresh Google Calendar and choose **Day** or **Week**. Chrome keeps it updated for you.
 
-The store currently has version 0.5.0. Version 0.6.0 in this repository (the monochrome popup, short-event labels, and durations in the event-details popup) will reach the store as an update after review. To try 0.6.0 before then, load it unpacked:
+The store has version 0.6.0. Version 0.6.1 in this repository (labels below the time on tall, narrow events) will reach the store as an update after review. To try it before then, load it unpacked:
 
 1. Extract the **install ZIP**, or download this repository.
 2. In Chrome, open **`chrome://extensions`** and turn on **Developer mode**.

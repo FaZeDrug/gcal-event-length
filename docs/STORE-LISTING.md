@@ -1,6 +1,6 @@
 # Chrome Web Store listing copy
 
-Review this before submitting; it describes version 0.6.0, not planned features.
+Review this before submitting; it describes version 0.6.1, not planned features.
 
 ## Name
 

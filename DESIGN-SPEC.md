@@ -1,6 +1,6 @@
 # Calendar Event Length — design specification
 
-Implementation reference: version 0.6.0, matching the approved monochrome Figma frames (`35:2` enabled/box, `35:30` enabled/parentheses, `35:58` disabled). The popup is 300×400 with a white background and square outer corners. Every UI element is black, grey, or white; only the animated ASCII tear-away calendar is purple. Heading **Event Duration** in Daisler Light (see the font-license note in the README).
+Implementation reference: version 0.6.1, matching the approved monochrome Figma frames (`35:2` enabled/box, `35:30` enabled/parentheses, `35:58` disabled). The popup is 300×400 with a white background and square outer corners. Every UI element is black, grey, or white; only the animated ASCII tear-away calendar is purple. Heading **Event Duration** in Daisler Light (see the font-license note in the README).
 
 ## Product in one sentence
 
@@ -17,7 +17,7 @@ There is no dashboard, login, onboarding flow, calendar picker, event editor, or
 
 ## In-calendar presentation
 
-**Placement:** always immediately after the time text, regardless of event height or whether it has a location. The event title remains above, and the location remains on its original line below. There is no bottom-of-block or below-time placement mode anymore.
+**Placement:** immediately after the time text whenever it fits on that line, regardless of event height or whether it has a location. If the event is too narrow for the label beside the time but tall enough, the label goes on its own line directly below the time instead. If neither fits, the label is omitted. The event title stays above the time.
 
 **Fit:** preserve the complete original time range. If the time plus duration will not fit horizontally or vertically, omit the duration. Never resize the event, overlap its contents, wrap the duration onto another row, or truncate the original time. A long-duration event can still be too narrow to label; duration and rendered block size are separate facts.
 
